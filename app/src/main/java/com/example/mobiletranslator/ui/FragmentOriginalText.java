@@ -1,4 +1,4 @@
-package com.example.mobiletranslator;
+package com.example.mobiletranslator.ui;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -17,6 +17,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.mobiletranslator.FileUtility;
+import com.example.mobiletranslator.ImageParser;
+import com.example.mobiletranslator.R;
 
 
 public class FragmentOriginalText extends Fragment {

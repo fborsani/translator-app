@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FragmentOriginalText">
+    tools:context=".ui.FragmentOriginalText">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -66,12 +66,11 @@
             android:layout_height="match_parent"
             android:orientation="horizontal">
 
-            <MultiAutoCompleteTextView
+            <Spinner
                 android:id="@+id/languageField"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="MultiAutoCompleteTextView" />
+                android:layout_weight="1" />
 
             <Button
                 android:id="@+id/translateBtn"

@@ -3,6 +3,9 @@ package com.example.mobiletranslator;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mobiletranslator.ui.FragmentConfig;
+import com.example.mobiletranslator.ui.FragmentOriginalText;
+import com.example.mobiletranslator.ui.FragmentTranslatedText;
 import com.google.android.material.tabs.TabLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -23,15 +26,20 @@ public class MainActivity extends AppCompatActivity {
         @NonNull
         @Override
         public Fragment createFragment(int position) {
-            if(position == 0) {
-                return new FragmentOriginalText();
+            switch(position){
+                case 0:
+                    return new FragmentOriginalText();
+                case 1:
+                    return new FragmentTranslatedText();
+                case 2:
+                default:
+                    return new FragmentConfig();
             }
-            return new FragmentTranslatedText();
         }
 
         @Override
         public int getItemCount() {
-            return 2;
+            return 3;
         }
     }
 
