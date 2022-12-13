@@ -8,6 +8,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import android.provider.MediaStore;
@@ -21,8 +22,12 @@ import com.example.mobiletranslator.FileUtility;
 import com.example.mobiletranslator.ImageParser;
 import com.example.mobiletranslator.R;
 
+import java.io.File;
+
 
 public class FragmentOriginalText extends Fragment {
+    private Uri fileUri;
+
     private final ActivityResultLauncher<Intent> retrieveImageActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
@@ -36,13 +41,20 @@ public class FragmentOriginalText extends Fragment {
                 }
             });
 
+
     private final ActivityResultLauncher<Intent> takePictureActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             new ActivityResultCallback<ActivityResult>() {
                 @Override
                 public void onActivityResult(ActivityResult result) {
+                    ImageParser ip = new ImageParser(getView().getContext(),"eng");
+                    EditText textField = (EditText) getView().findViewById(R.id.textInputField);
+                    textField.setText(ip.parseUri(fileUri));
+                    ip.recycle();
                 }
             });
+
+
 
     private final ActivityResultLauncher<Intent> retrieveTextFromFileActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -87,7 +99,8 @@ public class FragmentOriginalText extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                //intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                fileUri = FileUtility.createTempImageUri(getView().getContext());
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                 takePictureActivityResult.launch(intent);
             }
         });

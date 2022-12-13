@@ -7,8 +7,10 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.FileProvider;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -18,6 +20,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class FileUtility {
     public static final int FILE_RETURN_CODE = 100;
@@ -71,7 +75,7 @@ public class FileUtility {
         return chooserIntent;
     }
 
-    public static Bitmap createBmp(Uri uri, Context context) {
+    public static Bitmap createBmp(Uri uri, Context context){
         try {
             InputStream is = context.getContentResolver().openInputStream(uri);
             return BitmapFactory.decodeStream(is);
@@ -81,20 +85,31 @@ public class FileUtility {
         }
     }
 
+    public static Uri createTempImageUri(Context context) {
+        try {
+            String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+            String name = "IMG_" + timestamp;
+            File tempFile = File.createTempFile(name, ".jpg", context.getFilesDir());
+            String authority = context.getApplicationContext().getPackageName() + ".provider";
+            return FileProvider.getUriForFile(context, authority, tempFile);
+        }
+        catch(IOException e){
+            return null;
+        }
+    }
+
     //TODO: REMOVE ME
-    public static void copyFile(@NonNull AssetManager am, @NonNull String assetName,
-                                 @NonNull File outFile) {
-        try (
-                InputStream in = am.open(assetName);
-                OutputStream out = new FileOutputStream(outFile)
-        ) {
+    public static void copyFile(@NonNull AssetManager am, @NonNull String assetName, @NonNull File outFile) {
+        try {
+            InputStream in = am.open(assetName);
+            OutputStream out = new FileOutputStream(outFile);
             byte[] buffer = new byte[1024];
             int read;
             while ((read = in.read(buffer)) != -1) {
                 out.write(buffer, 0, read);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        catch(IOException e){
         }
     }
 }
