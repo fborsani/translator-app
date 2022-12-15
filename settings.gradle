@@ -15,3 +15,4 @@ dependencyResolutionManagement {
 }
 rootProject.name = "mobileTranslator"
 include ':app'
+include ':opencv-4.6'

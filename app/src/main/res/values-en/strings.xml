@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="app_name">TranslatorApp</string>
     <string name="action_translate">Translate</string>
@@ -7,8 +6,8 @@
     <string name="action_import_gallery">Open Gallery</string>
     <string name="action_import_file">Open Text File</string>
     <string name="action_export_clipboard">Copy To Clipboard</string>
-    <string name="status_ocr_optimizing">Optimizing Image...</string>
-    <string name="status_ocr_scanning">Scanning...</string>
-    <string name="status_translation_waiting">Waiting For Response...</string>
+    <string name="status_ocr_optimizing">Optimizing Image…</string>
+    <string name="status_ocr_scanning">Scanning…</string>
+    <string name="status_translation_waiting">Waiting For Response…</string>
     <string name="status_error_generic">An Error Occurred</string>
 </resources>

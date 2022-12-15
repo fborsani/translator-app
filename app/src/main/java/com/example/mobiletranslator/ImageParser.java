@@ -15,15 +15,25 @@ import com.googlecode.tesseract.android.TessBaseAPI;
 
 import java.io.File;
 
+import org.opencv.android.OpenCVLoader;
+import org.opencv.android.Utils;
+import org.opencv.core.Mat;
+import org.opencv.core.Size;
+import org.opencv.imgproc.Imgproc;
+
+
 public class ImageParser {
     private final TessBaseAPI tess;
     private final Context context;
     private boolean initialized;
 
-    private static final int BORDER_SIZE = 12;
+    private static final int IMG_WIDTH = 2048;
+    private static final int IMG_HEIGHT = 1024;
+    private static final int BORDER_SIZE = 8;
     private static final int BORDER_COLOR = Color.BLACK;
     private static final int CONTRAST = 10; //0...10 default is 1
     private static final int BRIGHTNESS = 0; //-255...255 default is 0
+
 
     public ImageParser(Context context, String language){
         this.tess = new TessBaseAPI();
@@ -46,14 +56,17 @@ public class ImageParser {
         if(!initialized){
             tess.recycle();
         }
+
+        //System.loadLibrary( Core.NATIVE_LIBRARY_NAME );
+        OpenCVLoader.initDebug();
     }
 
     public boolean isInitialized(){
         return initialized;
     }
 
-
-    public Bitmap optimizeImage(Bitmap img){
+    //TODO: consider eliminating this one
+    public Bitmap _optimizeImage(Bitmap img){
         //add border
         Bitmap optimizedImg =  Bitmap.createBitmap(img.getWidth()+BORDER_SIZE*2, img.getHeight()+BORDER_SIZE*2, img.getConfig());
         int height = optimizedImg.getHeight();
@@ -125,9 +138,53 @@ public class ImageParser {
         return optimizedImg;
     }
 
+    public Bitmap optimizeImage(Bitmap img){
+
+        //add border
+        Bitmap optimizedBmp =  Bitmap.createBitmap(img.getWidth()+BORDER_SIZE*2, img.getHeight()+BORDER_SIZE*2, img.getConfig());
+
+        //set brightness and contrast
+        ColorMatrix cm = new ColorMatrix(new float[]
+                {
+                        CONTRAST, 0, 0, 0, BRIGHTNESS,
+                        0, CONTRAST, 0, 0, BRIGHTNESS,
+                        0, 0, CONTRAST, 0, BRIGHTNESS,
+                        0, 0, 0, 1, 0
+                });
+
+        Canvas canvas = new Canvas(optimizedBmp);
+        Paint paint = new Paint();
+        paint.setColorFilter(new ColorMatrixColorFilter(cm));
+        canvas.drawColor(BORDER_COLOR);
+        canvas.drawBitmap(img, BORDER_SIZE, BORDER_SIZE, null);
+
+        Mat mat = new Mat();
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size((2*2) + 1, (2*2)+1));;
+        Utils.bitmapToMat(optimizedBmp,mat);
+
+        //resize
+        //TODO: manage portrait pictures to avoid stretching the image and cases where the picture has to be downscaled because it is bigger than required
+        Size scaleSize = new Size(IMG_WIDTH,IMG_HEIGHT);
+        Imgproc.resize(mat,mat,scaleSize,0,0,Imgproc.INTER_CUBIC);
+        //Imgproc.resize(mat,mat,scaleSize,0,0,Imgproc.INTER_LINEAR); <-- works better for downscaling
+
+        //set to grayscale, remove noise and add blur
+        Imgproc.cvtColor(mat,mat,Imgproc.COLOR_BGR2GRAY);
+        Imgproc.dilate(mat,mat,kernel);
+        Imgproc.erode(mat,mat,kernel);
+        Imgproc.medianBlur(mat,mat,5);
+
+        //binarize image
+        Imgproc.adaptiveThreshold(mat,mat,255,Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C,Imgproc.THRESH_BINARY,31,2);
+
+        Bitmap bitmapOut = Bitmap.createBitmap(IMG_WIDTH,IMG_HEIGHT,optimizedBmp.getConfig());
+        Utils.matToBitmap(mat,bitmapOut);
+        return bitmapOut;
+    }
+
     public String parseImg(Bitmap img){
-        //Bitmap optimizedImage = optimizeImage(img);
-        tess.setImage(img);
+        Bitmap optimizedImage = optimizeImage(img);
+        tess.setImage(optimizedImage);
         return tess.getUTF8Text();
     }
 
