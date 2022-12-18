@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<languages>
+    <entry name="English" iso="en" polite="false"/>
+    <entry name="French" iso="fr" polite="true"/>
+    <entry name="Italian" iso="it" polite="true"/>
+    <entry name="German" iso="ge" polite="true"/>
+    <entry name="Spanish" iso="es" polite="true"/>
+    <entry name="Portuguese" iso="pt" polite="true"/>
+    <entry name="Russian" iso="ru" polite="true"/>
+    <entry name="Japanese" iso="ja" polite="false"/>
+    <entry name="Turkish" iso="tk" polite="false"/>
+</languages>

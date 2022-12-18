@@ -2,12 +2,13 @@ package com.example.mobiletranslator;
 
 import com.deepl.api.DeepLException;
 import com.deepl.api.Translator;
+import com.example.mobiletranslator.db.DbManager;
 
 public class TranslatorManager {
     private final Translator translator;
 
-    public TranslatorManager(){
-        String authKey = ""; //TODO retrieve from SqlLite
+    public TranslatorManager(DbManager db){
+        String authKey = db.getApiKey();
         translator = new Translator(authKey);
     }
 

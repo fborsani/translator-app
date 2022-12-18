@@ -7,10 +7,13 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
+import android.util.Xml;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.FileProvider;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,12 +24,17 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+
+import com.example.mobiletranslator.db.LanguageItem;
 
 public class FileUtility {
     public static final int FILE_RETURN_CODE = 100;
+    public static final String DEFAULT_OCR_FILE = "eng.traineddata";
+    public static final String SQL_LANGUAGE_DATA_FILE = "languages.xml";
 
-    public FileUtility(ContentResolver cr){}
+    private FileUtility(ContentResolver cr){}
 
     public static Intent createIntentGetImage(){
         return createIntent("image/*","Select gallery app",true);
@@ -98,8 +106,7 @@ public class FileUtility {
         }
     }
 
-    //TODO: REMOVE ME
-    public static void copyFile(@NonNull AssetManager am, @NonNull String assetName, @NonNull File outFile) {
+    public static void copyAssetFile(@NonNull AssetManager am, @NonNull String assetName, @NonNull File outFile) {
         try {
             InputStream in = am.open(assetName);
             OutputStream out = new FileOutputStream(outFile);
@@ -110,6 +117,38 @@ public class FileUtility {
             }
         }
         catch(IOException e){
+        }
+    }
+
+    public static InputStream copyAssetFile(@NonNull AssetManager am, @NonNull String assetName){
+        try {
+            return am.open(assetName);
+        } catch (IOException e) {
+            return null;
+        }
+    }
+
+    public static ArrayList<LanguageItem> parseLanguageFile(@NonNull AssetManager am) {
+        try {
+            InputStream in = copyAssetFile(am, SQL_LANGUAGE_DATA_FILE);
+            ArrayList list = new ArrayList<LanguageItem>();
+            XmlPullParser parser = Xml.newPullParser();
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(in, null);
+            int eventType = parser.getEventType();
+            while(eventType != XmlPullParser.END_DOCUMENT){
+                String tag = parser.getName();
+                if(eventType == XmlPullParser.START_TAG && tag.equals("entry")){
+                    String name = parser.getAttributeValue(null,"name");
+                    String isoCode = parser.getAttributeValue(null,"iso");
+                    String formal = parser.getAttributeValue(null,"polite");
+                    list.add(new LanguageItem(name,isoCode,formal,"false"));
+                }
+            }
+            return list;
+        }
+        catch (XmlPullParserException e) {
+            return null;
         }
     }
 }
