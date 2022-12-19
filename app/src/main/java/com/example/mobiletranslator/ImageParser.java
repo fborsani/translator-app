@@ -14,11 +14,13 @@ import android.net.Uri;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 import java.io.File;
+import java.util.ArrayList;
 
 import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
 import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
 
@@ -34,6 +36,7 @@ public class ImageParser {
     private static final int BORDER_COLOR = Color.BLACK;
     private static final int CONTRAST = 10; //0...10 default is 1
     private static final int BRIGHTNESS = 0; //-255...255 default is 0
+    private static final int LIGHTNESS_THRESHOLD = 64; //0...255 default is 64
 
 
     public ImageParser(Context context, String language){
@@ -102,17 +105,25 @@ public class ImageParser {
         }
         Imgproc.resize(mat,mat,scaleSize,0,0,Imgproc.INTER_CUBIC);
 
+        //invert image in case of dark background
+        Mat bg = new Mat();
+        Mat bgHls = new Mat();
+        ArrayList<Mat> channels = new ArrayList<>(3);
+        Imgproc.medianBlur(mat,bg,21);
+        Imgproc.cvtColor(bg, bgHls, Imgproc.COLOR_BGR2HLS);
+        Core.split(bgHls,channels);
+        Scalar lvalue0 = Core.mean(channels.get(0));
+        Scalar lvalue = Core.mean(channels.get(1));
+        Scalar lvalue2 = Core.mean(channels.get(2));
+        if(lvalue.val[0] < LIGHTNESS_THRESHOLD){
+            Core.bitwise_not(mat,mat);
+        }
+
         //set to grayscale, remove noise and add blur
         Imgproc.cvtColor(mat,mat,Imgproc.COLOR_BGR2GRAY);
         Imgproc.dilate(mat,mat,kernel);
         Imgproc.erode(mat,mat,kernel);
         Imgproc.medianBlur(mat,mat,5);
-
-        //invert image in case of white text on black background
-        Mat bg = new Mat();
-        Imgproc.medianBlur(mat,bg,21);
-        Core.absdiff(bg,mat,mat);
-        Core.bitwise_not(mat,mat);
 
         //binarize image
         Imgproc.adaptiveThreshold(mat,mat,255,Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C,Imgproc.THRESH_BINARY,31,2);
