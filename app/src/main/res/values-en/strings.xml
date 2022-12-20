@@ -10,4 +10,8 @@
     <string name="status_ocr_scanning">Scanning…</string>
     <string name="status_translation_waiting">Waiting For Response…</string>
     <string name="status_error_generic">An Error Occurred</string>
+    <string name="clear">Clear</string>
+    <string name="options_translate_formal">Use formal language</string>
+    <string name="options_translate_src">Translate From:</string>
+    <string name="options_translate_dst">Translate To:</string>
 </resources>
