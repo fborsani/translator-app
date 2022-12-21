@@ -8,23 +8,29 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="689dp"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
         <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Translated text" />
+            android:text="TextView" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
 
         <TextView
-            android:id="@+id/translatedTextView"
+            android:id="@+id/translatedTextField"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:scrollbars="vertical|horizontal"
-            android:textIsSelectable="true"
-            android:focusable="true"
-            android:longClickable="true" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="TextView" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,21 +38,23 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/copyToClipboardBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Button" />
-
-            <Button
                 android:id="@+id/clearBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Button" />
+                android:layout_height="48dp"
+                android:text="@string/clear"
+                app:icon="@drawable/ic_baseline_clear_24" />
 
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/sendToClipboardBtn"
+                android:layout_width="wrap_content"
+                android:layout_height="48dp"
+                android:text="@string/action_export_clipboard"
+                app:icon="@drawable/ic_baseline_attach_file_24" />
         </LinearLayout>
-
     </LinearLayout>
-
 </FrameLayout>

@@ -15,8 +15,9 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
+        android:hint="@string/hint_apikey"
         android:inputType="textPassword"
-        android:text="Name"
+        android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
@@ -146,24 +147,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/apiKeField">
 
-        <CheckBox
-            android:id="@+id/checkFreeVersion"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="CheckBox" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
-
         <Button
             android:id="@+id/testConfBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Button" />
+            android:text="@string/action_test_connection"
+            app:icon="@drawable/ic_baseline_vpn_key_24" />
 
         <Space
             android:layout_width="wrap_content"
@@ -175,7 +165,8 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="Button" />
+            android:text="@string/action_save_apikey"
+            app:icon="@drawable/ic_baseline_check_24" />
 
     </LinearLayout>
 

@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.mobiletranslator.FileUtility;
 import com.example.mobiletranslator.ImageParser;
@@ -77,9 +78,9 @@ public class FragmentOriginalText extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button galleryBtn = getView().findViewById(R.id.openGalleryBtn);
-        Button takePictureBtn =  getView().findViewById(R.id.takePictureBtn);
-        Button readFromFileBtn = getView().findViewById(R.id.openFileBtn);
+        ImageButton galleryBtn = getView().findViewById(R.id.openGalleryBtn);
+        ImageButton takePictureBtn =  getView().findViewById(R.id.takePictureBtn);
+        ImageButton readFromFileBtn = getView().findViewById(R.id.openFileBtn);
 
         galleryBtn.setOnClickListener(new View.OnClickListener() {
             @Override

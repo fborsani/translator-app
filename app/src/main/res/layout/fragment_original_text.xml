@@ -17,67 +17,152 @@
             android:layout_height="wrap_content"
             android:text="Insert text in the field below" />
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
         <EditText
             android:id="@+id/textInputField"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_margin="16dp"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
             android:ems="10"
             android:gravity="start|top"
             android:inputType="textMultiLine"
             android:scrollbars="vertical|horizontal" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/label_text_import_options" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <Button
+            <ImageButton
                 android:id="@+id/takePictureBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:src="@drawable/ic_baseline_photo_camera_24" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/openGalleryBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:src="@drawable/ic_baseline_image_search_24" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/openFileBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:src="@drawable/ic_baseline_file_copy_24" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/pasteBtn"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:src="@drawable/ic_baseline_attach_file_24" />
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="24dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <Spinner
-                android:id="@+id/languageField"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/translateBtn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.25"
+                    android:text="@string/options_translate_src" />
+
+                <Spinner
+                    android:id="@+id/languageFieldIn"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15" />
+            </LinearLayout>
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="16dp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.25"
+                    android:text="@string/options_translate_dst" />
+
+                <Spinner
+                    android:id="@+id/languageFieldOut"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.15" />
+            </LinearLayout>
+
+            <CheckBox
+                android:id="@+id/checkUseFormal"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
                 android:layout_weight="1"
-                android:text="Button" />
+                android:text="@string/options_translate_formal" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/clearinput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.5"
+                    android:text="@string/clear"
+                    app:icon="@drawable/ic_baseline_clear_24" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/translateBtn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="@string/action_translate"
+                    app:icon="@drawable/ic_baseline_send_24" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 </FrameLayout>

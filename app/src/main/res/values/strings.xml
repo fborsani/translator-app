@@ -6,7 +6,7 @@
     <string name="action_import_photo">Take Photo</string>
     <string name="action_import_gallery">Open Gallery</string>
     <string name="action_import_file">Open Text File</string>
-    <string name="action_export_clipboard">Copy To Clipboard</string>
+    <string name="action_export_clipboard">Copy All</string>
     <string name="status_ocr_optimizing">Optimizing Image...</string>
     <string name="status_ocr_scanning">Scanning...</string>
     <string name="status_translation_waiting">Waiting For Response...</string>
@@ -15,4 +15,8 @@
     <string name="options_translate_formal">Use formal language</string>
     <string name="options_translate_src">Translate From:</string>
     <string name="options_translate_dst">Translate To:</string>
+    <string name="action_save_apikey">Confirm</string>
+    <string name="action_test_connection">Test Key</string>
+    <string name="hint_apikey">Insert Deepl API key here</string>
+    <string name="label_text_import_options">Text import options</string>
 </resources>
