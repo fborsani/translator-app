@@ -34,7 +34,7 @@ public class FileUtility {
     public static final String DEFAULT_OCR_FILE = "eng.traineddata";
     public static final String SQL_LANGUAGE_DATA_FILE = "languages.xml";
 
-    private FileUtility(ContentResolver cr){}
+    private FileUtility(){}
 
     public static Intent createIntentGetImage(){
         return createIntent("image/*","Select gallery app",true);
@@ -49,7 +49,7 @@ public class FileUtility {
             InputStream is = cr.openInputStream(uri);
             BufferedReader br = new BufferedReader(new InputStreamReader(is));
             StringBuilder content = new StringBuilder();
-            String line = null;
+            String line;
 
             while ((line = br.readLine()) != null) {
                 content.append(line);
@@ -131,23 +131,27 @@ public class FileUtility {
     public static ArrayList<LanguageItem> parseLanguageFile(@NonNull AssetManager am) {
         try {
             InputStream in = copyAssetFile(am, SQL_LANGUAGE_DATA_FILE);
-            ArrayList list = new ArrayList<LanguageItem>();
+            ArrayList<LanguageItem> list = new ArrayList<>();
             XmlPullParser parser = Xml.newPullParser();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in, null);
-            int eventType = parser.getEventType();
+            int eventType = parser.next();
             while(eventType != XmlPullParser.END_DOCUMENT){
-                String tag = parser.getName();
-                if(eventType == XmlPullParser.START_TAG && tag.equals("entry")){
+                eventType= parser.next();
+                if(eventType == XmlPullParser.START_TAG && parser.getName().equals("entry")){
                     String name = parser.getAttributeValue(null,"name");
                     String isoCode = parser.getAttributeValue(null,"iso");
                     String formal = parser.getAttributeValue(null,"polite");
-                    list.add(new LanguageItem(name,isoCode,formal,"false"));
+                    String filename = parser.getAttributeValue(null, "filename");
+                    list.add(new LanguageItem(name, isoCode, filename, formal,"false"));
                 }
             }
             return list;
         }
         catch (XmlPullParserException e) {
+            return null;
+        }
+        catch (IOException e){
             return null;
         }
     }

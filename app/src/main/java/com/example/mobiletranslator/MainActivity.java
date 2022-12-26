@@ -3,6 +3,7 @@ package com.example.mobiletranslator;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mobiletranslator.db.DbManager;
 import com.example.mobiletranslator.ui.FragmentConfig;
 import com.example.mobiletranslator.ui.FragmentOriginalText;
 import com.example.mobiletranslator.ui.FragmentTranslatedText;

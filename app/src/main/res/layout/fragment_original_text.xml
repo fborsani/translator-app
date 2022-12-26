@@ -103,7 +103,7 @@
                 <Spinner
                     android:id="@+id/languageFieldIn"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="48dp"
                     android:layout_weight="0.15" />
             </LinearLayout>
 
@@ -126,7 +126,7 @@
                 <Spinner
                     android:id="@+id/languageFieldOut"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="48dp"
                     android:layout_weight="0.15" />
             </LinearLayout>
 
@@ -145,7 +145,7 @@
                 <Button
                     android:id="@+id/clearinput"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="48dp"
                     android:layout_weight="0.5"
                     android:text="@string/clear"
                     app:icon="@drawable/ic_baseline_clear_24" />
@@ -158,7 +158,7 @@
                 <Button
                     android:id="@+id/translateBtn"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:text="@string/action_translate"
                     app:icon="@drawable/ic_baseline_send_24" />

@@ -29,6 +29,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     Language.COLUMN_NAME_NAME + " TEXT," +
                     Language.COLUMN_NAME_ISO_CODE + " TEXT," +
                     Language.COLUMN_NAME_SUPPORT_FORMAL + " INTEGER,"+
+                    Language.COLUMN_OCR_FILENAME + " TEXT,"+
                     Language.COLUMN_NAME_INSTALLED + " INTEGER)";
 
     private static final String SQL_DELETE_PARAM = "DROP TABLE IF EXISTS " + Param.TABLE_NAME;
@@ -45,7 +46,8 @@ public class DbHelper extends SQLiteOpenHelper {
                     "("+Language.COLUMN_NAME_NAME+","+
                     Language.COLUMN_NAME_ISO_CODE+","+
                     Language.COLUMN_NAME_SUPPORT_FORMAL+","+
-                    Language.COLUMN_NAME_INSTALLED+") VALUES (?,?,?,?)";
+                    Language.COLUMN_OCR_FILENAME+","+
+                    Language.COLUMN_NAME_INSTALLED+") VALUES (?,?,?,?,?)";
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -76,11 +78,13 @@ public class DbHelper extends SQLiteOpenHelper {
         for(int i=0; i<rows.size(); ++i){
             insertLanguageStatement.clearBindings();
             insertLanguageStatement.bindString(1,rows.get(i).getName());
-            insertLanguageStatement.bindString(1,rows.get(i).getIsoCode());
-            insertLanguageStatement.bindLong(1,rows.get(i).isAllowFormalInt());
-            insertLanguageStatement.bindLong(1,rows.get(i).isDownloadedInt());
+            insertLanguageStatement.bindString(2,rows.get(i).getIsoCode());
+            insertLanguageStatement.bindLong(3,rows.get(i).isAllowFormalInt());
+            insertLanguageStatement.bindString(4,rows.get(i).getFilename());
+            insertLanguageStatement.bindLong(5,rows.get(i).isDownloadedInt());
             insertLanguageStatement.executeInsert();
         }
         db.setTransactionSuccessful();
+        db.endTransaction();
     }
 }

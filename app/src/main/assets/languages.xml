@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <languages>
-    <entry name="English" iso="en" polite="false"/>
-    <entry name="French" iso="fr" polite="true"/>
-    <entry name="Italian" iso="it" polite="true"/>
-    <entry name="German" iso="ge" polite="true"/>
-    <entry name="Spanish" iso="es" polite="true"/>
-    <entry name="Portuguese" iso="pt" polite="true"/>
-    <entry name="Russian" iso="ru" polite="true"/>
-    <entry name="Japanese" iso="ja" polite="false"/>
-    <entry name="Turkish" iso="tk" polite="false"/>
+    <entry name="English" iso="en" iso3="eng" polite="false" filename="eng.traineddata"/>
+    <entry name="French" iso="fre" iso3="fre" polite="true" filename="eng.traineddata"/>
+    <entry name="Italian" iso="it" iso3="ita" polite="true" filename="eng.traineddata"/>
+    <entry name="German" iso="ge" iso3="ger" polite="true" filename="eng.traineddata"/>
+    <entry name="Spanish" iso="es" iso3="spa" polite="true" filename="eng.traineddata"/>
+    <entry name="Portuguese" iso="pt" iso3="por" polite="true" filename="eng.traineddata"/>
+    <entry name="Russian" iso="ru" iso3="rus" polite="true" filename="eng.traineddata"/>
+    <entry name="Japanese" iso="ja" iso3="jap" polite="false" filename="eng.traineddata"/>
+    <entry name="Turkish" iso="tk" iso3="tur" polite="false" filename="eng.traineddata"/>
 </languages>
