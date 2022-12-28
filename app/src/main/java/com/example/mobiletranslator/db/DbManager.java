@@ -16,6 +16,7 @@ public class DbManager {
     public static final String API_KEY_PARAM_NAME = "ApiKey";
 
     public static final String LANG_PARAM_ISO = "iso";
+    public static final String LANG_PARAM_ISO3 = "iso3";
     public static final String LANG_PARAM_FORMAL = "formal";
 
     private final DbHelper helper;
@@ -50,6 +51,7 @@ public class DbManager {
         String[] columns = {Language._ID,
                             Language.COLUMN_NAME_NAME,
                             Language.COLUMN_NAME_ISO_CODE,
+                            Language.COLUMN_NAME_ISO_CODE3,
                             Language.COLUMN_NAME_SUPPORT_FORMAL};
 
         Cursor cursor = db.query(Language.TABLE_NAME, columns, null, null, null, null, Language.COLUMN_NAME_NAME);
@@ -57,6 +59,7 @@ public class DbManager {
         ArrayList<String> langList = new ArrayList<>();
         int colName = cursor.getColumnIndexOrThrow(Language.COLUMN_NAME_NAME);
         int colIso = cursor.getColumnIndexOrThrow(Language.COLUMN_NAME_ISO_CODE);
+        int colIso3 = cursor.getColumnIndexOrThrow(Language.COLUMN_NAME_ISO_CODE3);
         int colFormal = cursor.getColumnIndexOrThrow(Language.COLUMN_NAME_SUPPORT_FORMAL);
 
         if (cursor.moveToFirst()) {
@@ -65,6 +68,7 @@ public class DbManager {
                 if(arrayDataList != null){
                     HashMap<String,Object> dataMapItem = new HashMap<>();
                     dataMapItem.put(LANG_PARAM_ISO,cursor.getString(colIso));
+                    dataMapItem.put(LANG_PARAM_ISO3,cursor.getString(colIso3));
                     dataMapItem.put(LANG_PARAM_FORMAL,cursor.getInt(colFormal));
                     arrayDataList.add(dataMapItem);
                 }

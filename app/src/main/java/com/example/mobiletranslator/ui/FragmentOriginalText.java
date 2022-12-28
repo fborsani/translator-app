@@ -150,7 +150,7 @@ public class FragmentOriginalText extends Fragment {
         translateBtn.setOnClickListener(onClickTranslate -> {
             TranslatorManager tm = new TranslatorManager(getView().getContext());
             EditText textField = getView().findViewById(R.id.textInputField);
-            String translatedText = tm.translate(textField.getText().toString(), currentIsoIn, currentIsoOut, useFormal);
+            String translatedText = tm.translate(textField.getText().toString(),currentIsoIn, currentIsoOut, useFormal);
             Bundle result = new Bundle();
             result.putString("translatedText",translatedText);
             getParentFragmentManager().setFragmentResult("translationFragment",result);

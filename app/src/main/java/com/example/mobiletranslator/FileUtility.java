@@ -141,9 +141,10 @@ public class FileUtility {
                 if(eventType == XmlPullParser.START_TAG && parser.getName().equals("entry")){
                     String name = parser.getAttributeValue(null,"name");
                     String isoCode = parser.getAttributeValue(null,"iso");
+                    String isoCode3 = parser.getAttributeValue(null,"iso3");
                     String formal = parser.getAttributeValue(null,"polite");
                     String filename = parser.getAttributeValue(null, "filename");
-                    list.add(new LanguageItem(name, isoCode, filename, formal,"false"));
+                    list.add(new LanguageItem(name, isoCode, isoCode3, filename, formal,"false"));
                 }
             }
             return list;

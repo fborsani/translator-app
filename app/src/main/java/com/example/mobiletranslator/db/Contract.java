@@ -15,6 +15,7 @@ public final class Contract {
         public static final String TABLE_NAME = "language";
         public static final String COLUMN_NAME_NAME = "name";
         public static final String COLUMN_NAME_ISO_CODE = "iso_code";
+        public static final String COLUMN_NAME_ISO_CODE3 = "iso_code3";
         public static final String COLUMN_NAME_SUPPORT_FORMAL = "support_formal";
         public static final String COLUMN_OCR_FILENAME = "ocr_filename";
         public static final String COLUMN_NAME_INSTALLED = "installed";

@@ -7,21 +7,24 @@ import java.util.Objects;
 public class LanguageItem {
     private final String name;
     private final String isoCode;
+    private final String isoCode3;
     private final String filename;
     private final boolean allowFormal;
     private final boolean downloaded;
 
-    public LanguageItem(@NonNull String name, @NonNull String isoCode, @NonNull String filename, boolean allowFormal, boolean downloaded) {
+    public LanguageItem(@NonNull String name, @NonNull String isoCode, @NonNull String isoCode3, @NonNull String filename, boolean allowFormal, boolean downloaded) {
         this.name = name;
         this.isoCode = isoCode;
+        this.isoCode3 = isoCode3;
         this.allowFormal = allowFormal;
         this.filename = filename;
         this.downloaded = downloaded;
     }
 
-    public LanguageItem(@NonNull String name, @NonNull String isoCode, @NonNull String filename, String allowFormal, String downloaded) {
+    public LanguageItem(@NonNull String name, @NonNull String isoCode, @NonNull String isoCode3, @NonNull String filename, String allowFormal, String downloaded) {
         this.name = name;
         this.isoCode = isoCode;
+        this.isoCode3 = isoCode3;
         this.filename = filename;
         this.allowFormal = allowFormal != null && (allowFormal.equals("true") || allowFormal.equals("1"));
         this.downloaded = downloaded != null && (downloaded.equals("true") || downloaded.equals("1"));
@@ -30,6 +33,8 @@ public class LanguageItem {
     public String getName() { return name; }
 
     public String getIsoCode() { return isoCode; }
+
+    public String getIsoCode3() { return isoCode3; }
 
     public String getFilename() { return filename; }
 
