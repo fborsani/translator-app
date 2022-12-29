@@ -9,6 +9,7 @@ import android.graphics.ColorMatrix;
 import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 
+import android.media.ExifInterface;
 import android.net.Uri;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
@@ -71,7 +72,7 @@ public class ImageParser {
     public Bitmap optimizeImage(Bitmap img){
 
         //add border
-        Bitmap optimizedBmp =  Bitmap.createBitmap(img.getWidth()+BORDER_SIZE*2, img.getHeight()+BORDER_SIZE*2, img.getConfig());
+        Bitmap optimizedBmp = Bitmap.createBitmap(img.getWidth()+BORDER_SIZE*2, img.getHeight()+BORDER_SIZE*2, img.getConfig());
 
         //set brightness and contrast
         ColorMatrix cm = new ColorMatrix(new float[]
@@ -89,7 +90,7 @@ public class ImageParser {
         canvas.drawBitmap(img, BORDER_SIZE, BORDER_SIZE, null);
 
         Mat mat = new Mat();
-        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size((2*2) + 1, (2*2)+1));;
+        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(3, 3));
         Utils.bitmapToMat(optimizedBmp,mat);
 
         //resize
@@ -103,7 +104,13 @@ public class ImageParser {
         else{
             scaleSize = new Size(IMG_HEIGHT, IMG_HEIGHT);
         }
-        Imgproc.resize(mat,mat,scaleSize,0,0,Imgproc.INTER_CUBIC);
+
+        if(optimizedBmp.getWidth() > IMG_WIDTH || optimizedBmp.getHeight() > IMG_HEIGHT) {
+            Imgproc.resize(mat, mat, scaleSize, 0, 0, Imgproc.INTER_LINEAR);
+        }
+        else if(optimizedBmp.getWidth() < IMG_WIDTH || optimizedBmp.getHeight() < IMG_HEIGHT) {
+            Imgproc.resize(mat, mat, scaleSize, 0, 0, Imgproc.INTER_CUBIC);
+        }
 
         //invert image in case of dark background
         Mat bg = new Mat();
@@ -112,9 +119,7 @@ public class ImageParser {
         Imgproc.medianBlur(mat,bg,21);
         Imgproc.cvtColor(bg, bgHls, Imgproc.COLOR_BGR2HLS);
         Core.split(bgHls,channels);
-        Scalar lvalue0 = Core.mean(channels.get(0));
         Scalar lvalue = Core.mean(channels.get(1));
-        Scalar lvalue2 = Core.mean(channels.get(2));
         if(lvalue.val[0] < LIGHTNESS_THRESHOLD){
             Core.bitwise_not(mat,mat);
         }
@@ -126,7 +131,7 @@ public class ImageParser {
         Imgproc.medianBlur(mat,mat,5);
 
         //binarize image
-        Imgproc.adaptiveThreshold(mat,mat,255,Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C,Imgproc.THRESH_BINARY,31,2);
+        Imgproc.adaptiveThreshold(mat,mat,255,Imgproc.ADAPTIVE_THRESH_GAUSSIAN_C,Imgproc.THRESH_BINARY,15,2);
 
         Bitmap bitmapOut = Bitmap.createBitmap(mat.width(),mat.height(),optimizedBmp.getConfig());
         Utils.matToBitmap(mat,bitmapOut);

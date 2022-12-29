@@ -29,6 +29,7 @@ public class DbHelper extends SQLiteOpenHelper {
                     Language.COLUMN_NAME_NAME + " TEXT," +
                     Language.COLUMN_NAME_ISO_CODE + " TEXT," +
                     Language.COLUMN_NAME_ISO_CODE3 + " TEXT," +
+                    Language.COLUMN_NAME_VISIBILITY + " TEXT," +
                     Language.COLUMN_NAME_SUPPORT_FORMAL + " INTEGER,"+
                     Language.COLUMN_OCR_FILENAME + " TEXT,"+
                     Language.COLUMN_NAME_INSTALLED + " INTEGER)";
@@ -47,9 +48,10 @@ public class DbHelper extends SQLiteOpenHelper {
                     "("+Language.COLUMN_NAME_NAME+","+
                     Language.COLUMN_NAME_ISO_CODE+","+
                     Language.COLUMN_NAME_ISO_CODE3+","+
+                    Language.COLUMN_NAME_VISIBILITY+","+
                     Language.COLUMN_NAME_SUPPORT_FORMAL+","+
                     Language.COLUMN_OCR_FILENAME+","+
-                    Language.COLUMN_NAME_INSTALLED+") VALUES (?,?,?,?,?,?)";
+                    Language.COLUMN_NAME_INSTALLED+") VALUES (?,?,?,?,?,?,?)";
 
     public DbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -82,9 +84,10 @@ public class DbHelper extends SQLiteOpenHelper {
             insertLanguageStatement.bindString(1,rows.get(i).getName());
             insertLanguageStatement.bindString(2,rows.get(i).getIsoCode());
             insertLanguageStatement.bindString(3,rows.get(i).getIsoCode3());
-            insertLanguageStatement.bindLong(4,rows.get(i).isAllowFormalInt());
-            insertLanguageStatement.bindString(5,rows.get(i).getFilename());
-            insertLanguageStatement.bindLong(6,rows.get(i).isDownloadedInt());
+            insertLanguageStatement.bindString(4,rows.get(i).getVisibility());
+            insertLanguageStatement.bindLong(5,rows.get(i).isAllowFormalInt());
+            insertLanguageStatement.bindString(6,rows.get(i).getFilename());
+            insertLanguageStatement.bindLong(7,rows.get(i).isDownloadedInt());
             insertLanguageStatement.executeInsert();
         }
         db.setTransactionSuccessful();

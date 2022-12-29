@@ -46,7 +46,15 @@ public class DbManager {
         db.update(Param.TABLE_NAME,cv,selection,args);
     }
 
-    public ArrayList<String> getLanguages(@Nullable ArrayList<HashMap<String,Object>> arrayDataList){
+    public ArrayList<String> getLanguagesIn(@Nullable ArrayList<HashMap<String,Object>> arrayDataList){
+        return getLanguages(arrayDataList,new String[]{LanguageOptionVisibility.VISIBILITY_IN});
+    }
+
+    public ArrayList<String> getLanguagesOut(@Nullable ArrayList<HashMap<String,Object>> arrayDataList){
+        return getLanguages(arrayDataList,new String[]{LanguageOptionVisibility.VISIBILITY_OUT});
+    }
+
+    public ArrayList<String> getLanguages(@Nullable ArrayList<HashMap<String,Object>> arrayDataList, String[] args){
         SQLiteDatabase db = helper.getReadableDatabase();
         String[] columns = {Language._ID,
                             Language.COLUMN_NAME_NAME,
@@ -54,7 +62,9 @@ public class DbManager {
                             Language.COLUMN_NAME_ISO_CODE3,
                             Language.COLUMN_NAME_SUPPORT_FORMAL};
 
-        Cursor cursor = db.query(Language.TABLE_NAME, columns, null, null, null, null, Language.COLUMN_NAME_NAME);
+        String selection = Language.COLUMN_NAME_VISIBILITY+" IN (\'"+LanguageOptionVisibility.VISIBILITY_BOTH+"\', ?)";
+
+        Cursor cursor = db.query(Language.TABLE_NAME, columns, selection, args, null, null, Language.COLUMN_NAME_NAME);
 
         ArrayList<String> langList = new ArrayList<>();
         int colName = cursor.getColumnIndexOrThrow(Language.COLUMN_NAME_NAME);

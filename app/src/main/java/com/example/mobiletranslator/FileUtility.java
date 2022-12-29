@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Xml;
 
@@ -86,9 +88,36 @@ public class FileUtility {
     public static Bitmap createBmp(Uri uri, Context context){
         try {
             InputStream is = context.getContentResolver().openInputStream(uri);
-            return BitmapFactory.decodeStream(is);
+            ExifInterface ei = new ExifInterface(is);
+            is.close();
+            is = context.getContentResolver().openInputStream(uri);
+            Bitmap img = BitmapFactory.decodeStream(is);
+
+            //rotate image if taken in portrait mode
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+            int angle = 0;
+
+            switch(orientation){
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    angle = 90;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    angle = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    angle = 270;
+                    break;
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    return img;
+            }
+
+            Matrix matrix = new Matrix();
+            matrix.postRotate(angle);
+            return Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
         }
         catch(IOException e){
+            e.printStackTrace();
             return null;
         }
     }
@@ -102,6 +131,7 @@ public class FileUtility {
             return FileProvider.getUriForFile(context, authority, tempFile);
         }
         catch(IOException e){
+            e.printStackTrace();
             return null;
         }
     }
@@ -142,9 +172,10 @@ public class FileUtility {
                     String name = parser.getAttributeValue(null,"name");
                     String isoCode = parser.getAttributeValue(null,"iso");
                     String isoCode3 = parser.getAttributeValue(null,"iso3");
+                    String visibility = parser.getAttributeValue(null, "visibility");
                     String formal = parser.getAttributeValue(null,"polite");
                     String filename = parser.getAttributeValue(null, "filename");
-                    list.add(new LanguageItem(name, isoCode, isoCode3, filename, formal,"false"));
+                    list.add(new LanguageItem(name, isoCode, isoCode3, visibility, filename, formal,"false"));
                 }
             }
             return list;

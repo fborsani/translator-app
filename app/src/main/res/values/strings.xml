@@ -19,4 +19,7 @@
     <string name="action_test_connection">Test Key</string>
     <string name="hint_apikey">Insert Deepl API key here</string>
     <string name="label_text_import_options">Text import options</string>
+    <string name="label_input">Insert the text to translate in the field below</string>
+    <string name="label_output">Translated text</string>
+    <string name="label_output_placeholder">Translated text will appear here</string>
 </resources>
