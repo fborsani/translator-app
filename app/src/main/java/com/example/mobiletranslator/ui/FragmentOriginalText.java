@@ -1,5 +1,6 @@
 package com.example.mobiletranslator.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -48,21 +50,18 @@ public class FragmentOriginalText extends Fragment {
     private final ActivityResultLauncher<Intent> retrieveImageActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                Uri uri = result.getData().getData();
-                ImageParser ip = new ImageParser(getView().getContext(),"eng");
-                EditText textField = getView().findViewById(R.id.textInputField);
-                textField.setText(ip.parseUri(uri));
-                ip.recycle();
-            });
-
-    private final ActivityResultLauncher<Intent> takePictureActivityResult = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            new ActivityResultCallback<ActivityResult>() {
-                @Override
-                public void onActivityResult(ActivityResult result) {
-                    ImageParser ip = new ImageParser(getView().getContext(),"eng"); //TODO: set language from user input
+                if(result.getResultCode() == Activity.RESULT_OK) {
+                    Uri uri = result.getData().getData();
+                    ImageParser ip = new ImageParser(getView().getContext(), "eng");
                     EditText textField = getView().findViewById(R.id.textInputField);
-                    textField.setText(ip.parseUri(fileUri));
+
+                    if(uri != null){
+                        textField.setText(ip.parseUri(uri));
+                    }
+                    else{
+                        textField.setText(ip.parseUri(fileUri));
+                    }
+
                     ip.recycle();
                 }
             });
@@ -70,8 +69,10 @@ public class FragmentOriginalText extends Fragment {
     private final ActivityResultLauncher<Intent> retrieveTextFromFileActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                EditText textField = getView().findViewById(R.id.textInputField);
-                textField.setText(FileUtility.readFile(result.getData().getData(), getActivity().getContentResolver()));
+                if(result.getResultCode() == Activity.RESULT_OK) {
+                    EditText textField = getView().findViewById(R.id.textInputField);
+                    textField.setText(FileUtility.readFile(result.getData().getData(), getActivity().getContentResolver()));
+                }
             });
 
     public FragmentOriginalText(){}
@@ -86,43 +87,52 @@ public class FragmentOriginalText extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        //list of references to layout items
+        final View contentView = getActivity().findViewById(android.R.id.content);
+        final EditText textField = getView().findViewById(R.id.textInputField);
+        final ImageButton galleryBtn = getView().findViewById(R.id.openGalleryBtn);
+        final ImageButton takePictureBtn = getView().findViewById(R.id.takePictureBtn);
+        final ImageButton readFromFileBtn = getView().findViewById(R.id.openFileBtn);
+        final Spinner spinnerIn = getView().findViewById(R.id.languageFieldIn);
+        final Spinner spinnerOut = getView().findViewById(R.id.languageFieldOut);
+        final CheckBox formalCheckbox = getView().findViewById(R.id.checkUseFormal);
+
         //hide options when user edits the text field in order to free up space for the keyboard
-        EditText textField = getView().findViewById(R.id.textInputField);
         textField.setOnFocusChangeListener((arg0, onFocus) -> {
             LinearLayout optionsBlock = getView().findViewById(R.id.optionsBlock);
             if (onFocus) {
                 optionsBlock.setVisibility(View.GONE);
-            } else {
-                optionsBlock.setVisibility(View.VISIBLE);
-            }
-        });
 
-        textField.setOnKeyListener((v, keyCode, event) -> {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-                textField.clearFocus();
-                return true;
+                //detect if keyboard is closed by attaching a layoutListener to the view and listening for changes in window size
+                contentView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                    private int mPreviousHeight;
+
+                    @Override
+                    public void onGlobalLayout() {
+                        int newHeight = contentView.getHeight();
+                        if (mPreviousHeight != 0 && mPreviousHeight < newHeight) {
+                            optionsBlock.setVisibility(View.VISIBLE);
+                            textField.clearFocus();
+                            contentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        }
+                        mPreviousHeight = newHeight;
+                    }
+                });
             }
-            return false;
         });
 
         //Buttons functionality
-        ImageButton galleryBtn = getView().findViewById(R.id.openGalleryBtn);
-        ImageButton takePictureBtn = getView().findViewById(R.id.takePictureBtn);
-        ImageButton readFromFileBtn = getView().findViewById(R.id.openFileBtn);
-
-        galleryBtn.setOnClickListener(onClickGallery -> retrieveImageActivityResult.launch(FileUtility.createIntentGetImage()));
         readFromFileBtn.setOnClickListener(onClickReadFile -> retrieveTextFromFileActivityResult.launch(FileUtility.createIntentGetText()));
+        galleryBtn.setOnClickListener(onClickGallery -> retrieveImageActivityResult.launch(FileUtility.createIntentGetImage()));
         takePictureBtn.setOnClickListener(onClickPicture -> {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             fileUri = FileUtility.createTempImageUri(getView().getContext());
             intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
-            takePictureActivityResult.launch(intent);
+            retrieveImageActivityResult.launch(intent);
         });
 
         //Set values for language spinners
-        final DbManager dbm = new DbManager(getView().getContext());
-        Spinner spinnerIn = getView().findViewById(R.id.languageFieldIn);
-        Spinner spinnerOut = getView().findViewById(R.id.languageFieldOut);
+        final DbManager dbm = new DbManager(getView().getContext());    //TODO: move to main activity and pass as argument
         ArrayList<String> labelsIn = dbm.getLanguagesIn(languageDataListIn);
         ArrayList<String> labelsOut = dbm.getLanguagesOut(languageDataListOut);
 
@@ -166,7 +176,6 @@ public class FragmentOriginalText extends Fragment {
         });
 
         //Formal translation checkbox visibility logic
-        CheckBox formalCheckbox = getView().findViewById(R.id.checkUseFormal);
         formalCheckbox.setVisibility(View.GONE);
         formalCheckbox.setOnCheckedChangeListener((compoundButton, checked) -> useFormal = checked);
 
@@ -174,8 +183,7 @@ public class FragmentOriginalText extends Fragment {
         Button translateBtn = getView().findViewById(R.id.translateBtn);
         translateBtn.setOnClickListener(onClickTranslate -> {
             TranslatorManager tm = new TranslatorManager(getView().getContext());
-            EditText textInputField = getView().findViewById(R.id.textInputField);
-            String translatedText = tm.translate(textInputField.getText().toString(),currentIsoIn, currentIsoOut, useFormal);
+            String translatedText = tm.translate(textField.getText().toString(),currentIsoIn, currentIsoOut, useFormal);
             Bundle result = new Bundle();
             result.putString("translatedText",translatedText);
             getParentFragmentManager().setFragmentResult("translationFragment",result);

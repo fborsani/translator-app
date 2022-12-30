@@ -3,7 +3,6 @@ package com.example.mobiletranslator;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mobiletranslator.db.DbManager;
 import com.example.mobiletranslator.ui.FragmentConfig;
 import com.example.mobiletranslator.ui.FragmentOriginalText;
 import com.example.mobiletranslator.ui.FragmentTranslatedText;
@@ -32,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
                     return new FragmentOriginalText();
                 case 1:
                     return new FragmentTranslatedText();
-                case 2:
                 default:
                     return new FragmentConfig();
             }
@@ -59,9 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                pa.setCurrentItem(tab.getPosition());
-            }
+            public void onTabSelected(TabLayout.Tab tab) { pa.setCurrentItem(tab.getPosition()); }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {}

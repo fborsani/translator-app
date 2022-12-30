@@ -22,4 +22,9 @@
     <string name="label_input">Insert the text to translate in the field below</string>
     <string name="label_output">Translated text</string>
     <string name="label_output_placeholder">Translated text will appear here</string>
+    <string name="label_usage_data">You have used %1$s of the available characters in your quota (%2$s out of %3$s)</string>
+    <string name="label_apikey">Insert your DeepL Translate API key in the field below</string>
+    <string name="label_usage">Usage Data</string>
+    <string name="label_ocr_files">Configure the datasets used to extract text from images</string>
+    <string name="fragment_less_than_1">less than 1%</string>
 </resources>
