@@ -6,20 +6,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public final class ThreadService {
-    public static Object execute(Callable<Object> callable){
+    public static Object execute(Callable<Object> callable) throws AppException{
         try {
             ExecutorService executorService = Executors.newSingleThreadExecutor();
             Future<Object> result = executorService.submit(callable);
             return result.get();
         }
         catch (ExecutionException e) {
-            e.printStackTrace();
-            e.getCause();
-            return null;
+            throw new AppException(e.getCause());
         }
         catch (InterruptedException e) {
-            e.printStackTrace();
-            return null;
+            throw new AppException(e);
         }
     }
 }

@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.example.mobiletranslator.AppException;
 import com.example.mobiletranslator.R;
 import com.example.mobiletranslator.TranslatorManager;
 import com.example.mobiletranslator.UsageData;
@@ -20,11 +21,16 @@ import com.example.mobiletranslator.db.DbManager;
 
 public class FragmentConfig extends Fragment {
 
-    private void printUserData(TextView targetField, TranslatorManager tm, Resources resources){
-        UsageData data = tm.getUsageStats();
-        String percent = tm.getUsageStats().getCharPerc().equals("0%") ? resources.getString(R.string.fragment_less_than_1) : tm.getUsageStats().getCharPerc();
-        String text = String.format(resources.getString(R.string.label_usage_data), percent, data.getCharCount(), data.getCharLimit());
-        targetField.setText(text);
+    private void printUserData(TextView targetField, TranslatorManager tm, Resources resources) {
+        try {
+            UsageData data = tm.getUsageStats();
+            String percent = tm.getUsageStats().getCharPerc().equals("0%") ? resources.getString(R.string.fragment_less_than_1) : tm.getUsageStats().getCharPerc();
+            String text = String.format(resources.getString(R.string.label_usage_data), percent, data.getCharCount(), data.getCharLimit());
+            targetField.setText(text);
+        }
+        catch(AppException e){
+            SnackBarUtility.displayMessageError(e);
+        }
     }
 
     public FragmentConfig() {}

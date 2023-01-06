@@ -5,9 +5,13 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
+import com.example.mobiletranslator.AppException;
 import com.example.mobiletranslator.FileUtility;
 import com.example.mobiletranslator.db.Contract.*;
 
+import org.xmlpull.v1.XmlPullParserException;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -59,9 +63,13 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(SQL_CREATE_PARAM);
-        db.execSQL(SQL_CREATE_LANGUAGE);
-        loadData(db);
+        try {
+            db.execSQL(SQL_CREATE_PARAM);
+            db.execSQL(SQL_CREATE_LANGUAGE);
+            loadData(db);
+        } catch (XmlPullParserException | IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -70,7 +78,7 @@ public class DbHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void loadData(SQLiteDatabase db){
+    public void loadData(SQLiteDatabase db) throws XmlPullParserException, IOException {
         db.beginTransaction();
         SQLiteStatement insertParamStatement = db.compileStatement(SQL_INSERT_PARAM);
         insertParamStatement.bindString(1,DbManager.API_KEY_PARAM_NAME);

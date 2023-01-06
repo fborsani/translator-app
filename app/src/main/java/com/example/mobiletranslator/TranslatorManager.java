@@ -39,11 +39,7 @@ public class TranslatorManager {
                 return translator.translateText(text, langFrom, langTo, options).getText();
 
             }
-            catch(DeepLException e){
-                e.printStackTrace();
-                return null;
-            }
-            catch(InterruptedException e){
+            catch(DeepLException | InterruptedException e){
                 e.printStackTrace();
                 return null;
             }
@@ -61,10 +57,7 @@ public class TranslatorManager {
         public UsageData call(){
             try {
                 return new UsageData(translator.getUsage());
-            } catch (DeepLException e) {
-                e.printStackTrace();
-                return null;
-            } catch (InterruptedException e) {
+            } catch (DeepLException | InterruptedException e) {
                 e.printStackTrace();
                 return null;
             }
@@ -86,11 +79,11 @@ public class TranslatorManager {
         translator = new Translator(apiKey);
     }
 
-    public String translate(String text, String langFrom, String langTo, boolean useFormal){
+    public String translate(String text, String langFrom, String langTo, boolean useFormal) throws AppException{
         return Objects.requireNonNull(ThreadService.execute(new TranslatorWorker(translator,text,langFrom,langTo,useFormal))).toString();
     }
 
-    public UsageData getUsageStats(){
+    public UsageData getUsageStats() throws AppException{
         return (UsageData) Objects.requireNonNull(ThreadService.execute(new UsageDataWorker(translator)));
     }
 }
