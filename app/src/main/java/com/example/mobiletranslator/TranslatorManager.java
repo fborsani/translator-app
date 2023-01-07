@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.deepl.api.DeepLException;
 import com.deepl.api.Formality;
+import com.deepl.api.SentenceSplittingMode;
 import com.deepl.api.TextTranslationOptions;
 import com.deepl.api.Translator;
 import com.example.mobiletranslator.db.DbManager;
@@ -31,9 +32,12 @@ public class TranslatorManager {
         @Override
         public String call() throws DeepLException, InterruptedException{
             TextTranslationOptions options = new TextTranslationOptions();
+            options.setSentenceSplittingMode(SentenceSplittingMode.NoNewlines);
+
             if(useFormal){
                 options.setFormality(Formality.More);
             }
+
             return translator.translateText(text, langFrom, langTo, options).getText();
         }
     }
