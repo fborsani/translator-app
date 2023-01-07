@@ -29,7 +29,7 @@ public class FragmentConfig extends Fragment {
             targetField.setText(text);
         }
         catch(AppException e){
-            SnackBarUtility.displayMessageError(e);
+            SnackBarUtility.displayMessage(getActivity(),e);
         }
     }
 

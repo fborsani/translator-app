@@ -67,7 +67,7 @@ public class FragmentOriginalText extends Fragment {
                     }
                 }
                 catch(AppException e){
-                    SnackBarUtility.displayMessageError(e);
+                    SnackBarUtility.displayMessage(getActivity(),e);
                 }
                 finally {
                     ip.recycle();
@@ -85,7 +85,7 @@ public class FragmentOriginalText extends Fragment {
                     }
                 }
                 catch(IOException | NullPointerException e){
-                    SnackBarUtility.displayMessageError(e.getMessage());
+                    SnackBarUtility.displayMessage(getActivity(),e.getMessage(), SnackBarUtility.ERROR);
                 }
             });
 
@@ -110,6 +110,8 @@ public class FragmentOriginalText extends Fragment {
         final Spinner spinnerIn = getView().findViewById(R.id.languageFieldIn);
         final Spinner spinnerOut = getView().findViewById(R.id.languageFieldOut);
         final CheckBox formalCheckbox = getView().findViewById(R.id.checkUseFormal);
+        final Button translateBtn = getView().findViewById(R.id.translateBtn);
+        final Button clearBtn = getView().findViewById(R.id.clearinput);
 
         //hide options when user edits the text field in order to free up space for the keyboard
         textField.setOnFocusChangeListener((arg0, onFocus) -> {
@@ -135,7 +137,7 @@ public class FragmentOriginalText extends Fragment {
             }
         });
 
-        //Buttons functionality
+        //Import functionality
         readFromFileBtn.setOnClickListener(onClickReadFile -> retrieveTextFromFileActivityResult.launch(FileUtility.createIntentGetText()));
         galleryBtn.setOnClickListener(onClickGallery -> retrieveImageActivityResult.launch(FileUtility.createIntentGetImage()));
         takePictureBtn.setOnClickListener(onClickPicture -> {
@@ -146,7 +148,7 @@ public class FragmentOriginalText extends Fragment {
                 retrieveImageActivityResult.launch(intent);
             }
             catch(IOException e){
-                SnackBarUtility.displayMessageError(e.getMessage());
+                SnackBarUtility.displayMessage(getActivity(), e.getMessage(), SnackBarUtility.ERROR);
             }
         });
 
@@ -199,7 +201,6 @@ public class FragmentOriginalText extends Fragment {
         formalCheckbox.setOnCheckedChangeListener((compoundButton, checked) -> useFormal = checked);
 
         //Translate button
-        Button translateBtn = getView().findViewById(R.id.translateBtn);
         translateBtn.setOnClickListener(onClickTranslate -> {
             try {
                 TranslatorManager tm = new TranslatorManager(getView().getContext());
@@ -207,10 +208,16 @@ public class FragmentOriginalText extends Fragment {
                 Bundle result = new Bundle();
                 result.putString("translatedText", translatedText);
                 getParentFragmentManager().setFragmentResult("translationFragment", result);
+                SnackBarUtility.displayMessage(getActivity(),"Translation completed",SnackBarUtility.SUCCESS);
             }
             catch(AppException e){
-                SnackBarUtility.displayMessageError(e);
+                SnackBarUtility.displayMessage(getActivity(), e);
             }
+        });
+
+        //Clear button
+        clearBtn.setOnClickListener(onClickClear -> {
+            textField.setText("");
         });
     }
 }

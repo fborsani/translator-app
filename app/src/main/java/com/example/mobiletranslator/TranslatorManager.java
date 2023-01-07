@@ -8,7 +8,6 @@ import com.deepl.api.TextTranslationOptions;
 import com.deepl.api.Translator;
 import com.example.mobiletranslator.db.DbManager;
 
-import java.util.Objects;
 import java.util.concurrent.Callable;
 
 public class TranslatorManager {
@@ -30,19 +29,12 @@ public class TranslatorManager {
         }
 
         @Override
-        public String call(){
-            try {
-                TextTranslationOptions options = new TextTranslationOptions();
-                if(useFormal){
-                    options.setFormality(Formality.More);
-                }
-                return translator.translateText(text, langFrom, langTo, options).getText();
-
+        public String call() throws DeepLException, InterruptedException{
+            TextTranslationOptions options = new TextTranslationOptions();
+            if(useFormal){
+                options.setFormality(Formality.More);
             }
-            catch(DeepLException | InterruptedException e){
-                e.printStackTrace();
-                return null;
-            }
+            return translator.translateText(text, langFrom, langTo, options).getText();
         }
     }
 
@@ -54,23 +46,9 @@ public class TranslatorManager {
         }
 
         @Override
-        public UsageData call(){
-            try {
-                return new UsageData(translator.getUsage());
-            } catch (DeepLException | InterruptedException e) {
-                e.printStackTrace();
-                return null;
-            }
+        public UsageData call() throws DeepLException, InterruptedException {
+            return new UsageData(translator.getUsage());
         }
-    }
-
-    public TranslatorManager(DbManager db){
-        String apiKey = db.getApiKey();
-        translator = new Translator(apiKey);
-    }
-
-    public TranslatorManager(String apiKey){
-        translator = new Translator(apiKey);
     }
 
     public TranslatorManager(Context context){
@@ -80,11 +58,11 @@ public class TranslatorManager {
     }
 
     public String translate(String text, String langFrom, String langTo, boolean useFormal) throws AppException{
-        return Objects.requireNonNull(ThreadService.execute(new TranslatorWorker(translator,text,langFrom,langTo,useFormal))).toString();
+        return ThreadService.execute(new TranslatorWorker(translator,text,langFrom,langTo,useFormal)).toString();
     }
 
     public UsageData getUsageStats() throws AppException{
-        return (UsageData) Objects.requireNonNull(ThreadService.execute(new UsageDataWorker(translator)));
+        return (UsageData) ThreadService.execute(new UsageDataWorker(translator));
     }
 }
 

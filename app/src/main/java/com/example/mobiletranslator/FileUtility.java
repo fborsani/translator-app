@@ -7,7 +7,7 @@ import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
+import androidx.exifinterface.media.ExifInterface;
 import android.net.Uri;
 import android.util.Xml;
 
@@ -31,7 +31,6 @@ import java.util.Date;
 import com.example.mobiletranslator.db.LanguageItem;
 
 public class FileUtility {
-    public static final int FILE_RETURN_CODE = 100;
     public static final String DEFAULT_OCR_FILE = "eng.traineddata";
     public static final String SQL_LANGUAGE_DATA_FILE = "languages.xml";
 
@@ -44,7 +43,6 @@ public class FileUtility {
     public static Intent createIntentGetText(){
         return createIntent("text/plain","Select file manager",false);
     }
-
 
     public static String readFile(Uri uri, ContentResolver cr) throws IOException{
         InputStream is = cr.openInputStream(uri);
@@ -86,7 +84,7 @@ public class FileUtility {
 
         //rotate image if taken in portrait mode
         int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
-        int angle = 0;
+        int angle;
 
         switch(orientation){
             case ExifInterface.ORIENTATION_ROTATE_90:
