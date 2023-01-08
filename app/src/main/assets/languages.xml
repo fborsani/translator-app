@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <languages>
-    <entry name="Chinese" iso="zh" iso3="chn" visibility="both" polite="false" filename="eng.traineddata"/>
+    <entry name="Chinese" iso="zh" iso3="chn" visibility="both" polite="false" filename="chn.traineddata"/>
     <entry name="English" iso="en" iso3="eng" visibility="in" polite="false" filename="eng.traineddata"/>
     <entry name="English (US)" iso="en-us" iso3="eng" visibility="out" polite="false" filename="eng.traineddata"/>
     <entry name="English (UK)" iso="en-gb" iso3="eng" visibility="out" polite="false" filename="eng.traineddata"/>
-    <entry name="French" iso="fr" iso3="fre" visibility="both" polite="true" filename="eng.traineddata"/>
-    <entry name="Italian" iso="it" iso3="ita" visibility="both" polite="true" filename="eng.traineddata"/>
-    <entry name="German" iso="de" iso3="ger" visibility="both" polite="true" filename="eng.traineddata"/>
-    <entry name="Spanish" iso="es" iso3="spa" visibility="both" polite="true" filename="eng.traineddata"/>
-    <entry name="Portuguese" iso="pt" iso3="por" visibility="in" polite="true" filename="eng.traineddata"/>
-    <entry name="Portuguese (BR)" iso="pt-br" iso3="por" visibility="out" polite="true" filename="eng.traineddata"/>
-    <entry name="Portuguese (PT)" iso="pt-pt" iso3="por" visibility="out" polite="true" filename="eng.traineddata"/>
-    <entry name="Russian" iso="ru" iso3="rus" visibility="both" polite="true" filename="eng.traineddata"/>
-    <entry name="Japanese" iso="ja" iso3="jap" visibility="both" polite="false" filename="eng.traineddata"/>
-    <entry name="Turkish" iso="tr" iso3="tur" visibility="both" polite="false" filename="eng.traineddata"/>
+    <entry name="French" iso="fr" iso3="fre" visibility="both" polite="true" filename="fre.traineddata"/>
+    <entry name="Italian" iso="it" iso3="ita" visibility="both" polite="true" filename="ita.traineddata"/>
+    <entry name="German" iso="de" iso3="ger" visibility="both" polite="true" filename="ger.traineddata"/>
+    <entry name="Spanish" iso="es" iso3="spa" visibility="both" polite="true" filename="spa.traineddata"/>
+    <entry name="Portuguese" iso="pt" iso3="por" visibility="in" polite="true" filename="por.traineddata"/>
+    <entry name="Portuguese (BR)" iso="pt-br" iso3="por" visibility="out" polite="true" filename="por.traineddata"/>
+    <entry name="Portuguese (PT)" iso="pt-pt" iso3="por" visibility="out" polite="true" filename="por.traineddata"/>
+    <entry name="Russian" iso="ru" iso3="rus" visibility="both" polite="true" filename="rus.traineddata"/>
+    <entry name="Japanese" iso="ja" iso3="jap" visibility="both" polite="false" filename="jap.traineddata"/>
+    <entry name="Turkish" iso="tr" iso3="tur" visibility="both" polite="false" filename="tur.traineddata"/>
 </languages>

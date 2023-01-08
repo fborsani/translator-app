@@ -5,7 +5,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.database.sqlite.SQLiteStatement;
 
-import com.example.mobiletranslator.AppException;
 import com.example.mobiletranslator.FileUtility;
 import com.example.mobiletranslator.db.Contract.*;
 

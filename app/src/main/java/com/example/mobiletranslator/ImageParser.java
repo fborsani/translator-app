@@ -10,6 +10,7 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 
 import android.net.Uri;
+import android.os.Environment;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 
@@ -45,7 +46,7 @@ public class ImageParser {
         this.context = context;
         this.tess.setVariable("user_defined_dpi", "300");
 
-        dataFolder = context.getFilesDir().getAbsolutePath();
+        dataFolder = context.getExternalFilesDir(null).getAbsolutePath();
 
         OpenCVLoader.initDebug();
     }
@@ -53,20 +54,29 @@ public class ImageParser {
     public void loadLanguage(String language) throws AppException{
         try {
             File tessDir = new File(dataFolder, "tessdata");
+            boolean mkdirResult = true;
+
             if (!tessDir.exists()) {
-                tessDir.mkdir();
+                mkdirResult = tessDir.mkdir();
             }
 
-            //TODO: edit file checks
-            File engFile = new File(tessDir, "eng.traineddata");
-            if (!engFile.exists()) {
-                AssetManager am = context.getAssets();
-                FileUtility.copyAssetFile(am, "eng.traineddata", engFile);
-            }
+            if(mkdirResult) {
 
-            initialized = tess.init(dataFolder, language);
-            if (!initialized) {
+                //TODO: edit file checks
+                File engFile = new File(tessDir, "eng.traineddata");
+                if (!engFile.exists()) {
+                    AssetManager am = context.getAssets();
+                    FileUtility.copyAssetFile(am, "eng.traineddata", engFile);
+                }
+
+                initialized = tess.init(dataFolder, language);
+                if (!initialized) {
+                    tess.recycle();
+                }
+            }
+            else{
                 tess.recycle();
+                throw new AppException("Check write permissions");
             }
         }
         catch(IOException e){

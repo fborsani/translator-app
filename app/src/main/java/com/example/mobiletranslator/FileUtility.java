@@ -1,5 +1,6 @@
 package com.example.mobiletranslator;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -31,7 +32,6 @@ import java.util.Date;
 import com.example.mobiletranslator.db.LanguageItem;
 
 public class FileUtility {
-    public static final String DEFAULT_OCR_FILE = "eng.traineddata";
     public static final String SQL_LANGUAGE_DATA_FILE = "languages.xml";
 
     private FileUtility(){}

@@ -1,6 +1,11 @@
 package com.example.mobiletranslator.ui;
 
+import static android.content.ClipDescription.MIMETYPE_TEXT_PLAIN;
+
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -107,6 +112,7 @@ public class FragmentOriginalText extends Fragment {
         final ImageButton galleryBtn = getView().findViewById(R.id.openGalleryBtn);
         final ImageButton takePictureBtn = getView().findViewById(R.id.takePictureBtn);
         final ImageButton readFromFileBtn = getView().findViewById(R.id.openFileBtn);
+        final ImageButton pasteBtn = getView().findViewById(R.id.pasteBtn);
         final Spinner spinnerIn = getView().findViewById(R.id.languageFieldIn);
         final Spinner spinnerOut = getView().findViewById(R.id.languageFieldOut);
         final CheckBox formalCheckbox = getView().findViewById(R.id.checkUseFormal);
@@ -152,8 +158,26 @@ public class FragmentOriginalText extends Fragment {
             }
         });
 
+        pasteBtn.setOnClickListener(onClickPaste -> {
+            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            if(clipboard.hasPrimaryClip() && clipboard.getPrimaryClipDescription().hasMimeType(MIMETYPE_TEXT_PLAIN)){
+                ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
+                if(item.getText() != null){
+                    textField.setText(item.getText().toString());
+                    SnackBarUtility.displayMessage(getActivity(),"Text pasted",SnackBarUtility.SUCCESS);
+                }
+                else{
+                    SnackBarUtility.displayMessage(getActivity(),"Clipboard content is not plain text",SnackBarUtility.ERROR);
+                }
+            }
+            else{
+                SnackBarUtility.displayMessage(getActivity(),"Nothing to copy",SnackBarUtility.ERROR);
+            }
+        });
+
+
         //Set values for language spinners
-        final DbManager dbm = new DbManager(getView().getContext());    //TODO: move to main activity and pass as argument
+        final DbManager dbm = new DbManager(getView().getContext());
         ArrayList<String> labelsIn = dbm.getLanguagesIn(languageDataListIn);
         ArrayList<String> labelsOut = dbm.getLanguagesOut(languageDataListOut);
 
@@ -216,8 +240,6 @@ public class FragmentOriginalText extends Fragment {
         });
 
         //Clear button
-        clearBtn.setOnClickListener(onClickClear -> {
-            textField.setText("");
-        });
+        clearBtn.setOnClickListener(onClickClear -> textField.setText(""));
     }
 }

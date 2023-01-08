@@ -14,6 +14,7 @@ import java.util.HashMap;
 
 public class DbManager {
     public static final String API_KEY_PARAM_NAME = "ApiKey";
+    public static final String OCR_DOWNLOAD_URL_PARAM_NAME = "ocrUrl";
 
     public static final String LANG_PARAM_ISO = "iso";
     public static final String LANG_PARAM_ISO3 = "iso3";
@@ -26,15 +27,23 @@ public class DbManager {
     }
 
     public String getApiKey(){
+        return getParameter(API_KEY_PARAM_NAME);
+    }
+
+    public String getOcrDownloadUrl(){
+        return getParameter(OCR_DOWNLOAD_URL_PARAM_NAME);
+    }
+
+    private String getParameter(String key){
         SQLiteDatabase db = helper.getReadableDatabase();
         String selection = Param.COLUMN_NAME_DESCR+" = ?";
-        String[] args = {API_KEY_PARAM_NAME};
+        String[] args = {key};
         Cursor cursor = db.query(Param.TABLE_NAME,null, selection, args, null, null, null);
         cursor.moveToNext();
         int idx = cursor.getColumnIndexOrThrow(Param.COLUMN_NAME_VALUE);
-        String apiKey = cursor.getString(idx);
+        String value = cursor.getString(idx);
         cursor.close();
-        return apiKey;
+        return value;
     }
 
     public void setApiKey(String apiKey){
@@ -44,6 +53,19 @@ public class DbManager {
         ContentValues cv = new ContentValues();
         cv.put(Param.COLUMN_NAME_VALUE,apiKey);
         db.update(Param.TABLE_NAME,cv,selection,args);
+    }
+
+    public String getOcrFile(String iso3){
+        SQLiteDatabase db = helper.getReadableDatabase();
+        String[] columns = {Language._ID, Language.COLUMN_OCR_FILENAME};
+        String selection = Language.COLUMN_NAME_ISO_CODE3+" = ?";
+        String[] args = {iso3};
+        Cursor cursor = db.query(Language.TABLE_NAME, columns, selection, args, null, null, null);
+        int filenameIdx = cursor.getColumnIndexOrThrow(Language.COLUMN_OCR_FILENAME);
+        cursor.moveToNext();
+        String filename = cursor.getString(filenameIdx);
+        cursor.close();
+        return filename;
     }
 
     public ArrayList<String> getLanguagesIn(@Nullable ArrayList<HashMap<String,Object>> arrayDataList){
@@ -62,7 +84,7 @@ public class DbManager {
                             Language.COLUMN_NAME_ISO_CODE3,
                             Language.COLUMN_NAME_SUPPORT_FORMAL};
 
-        String selection = Language.COLUMN_NAME_VISIBILITY+" IN (\'"+LanguageOptionVisibility.VISIBILITY_BOTH+"\', ?)";
+        String selection = Language.COLUMN_NAME_VISIBILITY+" IN ('"+LanguageOptionVisibility.VISIBILITY_BOTH+"', ?)";
 
         Cursor cursor = db.query(Language.TABLE_NAME, columns, selection, args, null, null, Language.COLUMN_NAME_NAME);
 
