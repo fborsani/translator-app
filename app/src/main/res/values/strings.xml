@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="app_name">TranslatorApp</string>
     <string name="action_translate">Translate</string>
@@ -7,9 +6,9 @@
     <string name="action_import_gallery">Open Gallery</string>
     <string name="action_import_file">Open Text File</string>
     <string name="action_export_clipboard">Copy All</string>
-    <string name="status_ocr_optimizing">Optimizing Image...</string>
-    <string name="status_ocr_scanning">Scanning...</string>
-    <string name="status_translation_waiting">Waiting For Response...</string>
+    <string name="status_ocr_optimizing">Optimizing Image…</string>
+    <string name="status_ocr_scanning">Scanning…</string>
+    <string name="status_translation_waiting">Waiting For Response…</string>
     <string name="status_error_generic">An Error Occurred</string>
     <string name="clear">Clear</string>
     <string name="options_translate_formal">Use formal language</string>
@@ -22,9 +21,19 @@
     <string name="label_input">Insert the text to translate in the field below</string>
     <string name="label_output">Translated text</string>
     <string name="label_output_placeholder">Translated text will appear here</string>
-    <string name="label_usage_data">You have used %1$s of the available characters in your quota (%2$s out of %3$s)</string>
+    <string name="label_usage_data">%1$s / %2$s</string>
     <string name="label_apikey">Insert your DeepL Translate API key in the field below</string>
-    <string name="label_usage">Usage Data</string>
+    <string name="label_usage">Characters used:</string>
     <string name="label_ocr_files">Configure the datasets used to extract text from images</string>
-    <string name="fragment_less_than_1">less than 1%</string>
+    <string name="fragment_less_than_1">&lt; 1%</string>
+    <string name="label_apikey_status">Api Key Status:</string>
+    <string name="label_api_plan">Api Plan:</string>
+    <string name="label_apikey_info">Api Key and usage details</string>
+    <string name="label_apikey_valid">VALID</string>
+    <string name="label_apikey_over_limit">USAGE EXCEDED</string>
+    <string name="label_apikey_invalid">INVALID</string>
+    <string name="label_usage_unlimited">Unlimited</string>
+    <string name="label_plan_free">FREE</string>
+    <string name="label_plan_pro">PRO</string>
+    <string name="label_usage_perc">Charaters used (%):</string>
 </resources>

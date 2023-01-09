@@ -55,10 +55,15 @@ public class TranslatorManager {
         }
     }
 
-    public TranslatorManager(Context context){
+    public TranslatorManager(Context context) throws AppException{
         DbManager dbm = new DbManager(context);
         String apiKey = dbm.getApiKey();
-        translator = new Translator(apiKey);
+        if(apiKey != null && !apiKey.trim().isEmpty()) {
+            translator = new Translator(apiKey);
+        }
+        else{
+            throw new AppException("Api key is not defined");
+        }
     }
 
     public String translate(String text, String langFrom, String langTo, boolean useFormal) throws AppException{
