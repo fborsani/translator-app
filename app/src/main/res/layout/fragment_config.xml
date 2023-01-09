@@ -16,7 +16,7 @@
         android:layout_marginEnd="8dp"
         android:ems="10"
         android:hint="@string/hint_apikey"
-        android:inputType="text"
+        android:inputType="textPassword"
         android:selectAllOnFocus="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
