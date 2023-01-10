@@ -25,8 +25,8 @@ public class LocalDataManager {
 
     public String getFileDirPath(){ return filesDir.getAbsolutePath(); }
 
-    public File getFile(String subfolder, String filename){
-        return new File(filesDir+"/"+subfolder+"/"+filename);
+    public boolean checkFile(String subfolder, String filename){
+        return new File(filesDir+"/"+subfolder+"/"+filename).exists();
     }
 
     public Uri getDownloadedFile(long downloadId){
@@ -56,7 +56,13 @@ public class LocalDataManager {
 
     public long downloadOcrFile(String langIso3) throws AppException{
         String filename = dbm.getOcrFile(langIso3);
-        String siteUrl = dbm.getOcrDownloadUrl();
-        return downloadFile(filename, OCR_FOLDER, Uri.parse(siteUrl));
+        String baseUrl = context.getResources().getString(R.string.ocr_trained_data_url_best);
+        String url = baseUrl + "/" + filename;
+        return downloadFile(filename, OCR_FOLDER, Uri.parse(url));
+    }
+
+    public boolean checkOcrFile(String langIso3){
+        String filename = dbm.getOcrFile(langIso3);
+        return checkFile(OCR_FOLDER,filename);
     }
 }

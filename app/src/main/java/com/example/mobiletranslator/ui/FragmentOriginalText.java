@@ -32,6 +32,7 @@ import android.widget.Spinner;
 import com.example.mobiletranslator.AppException;
 import com.example.mobiletranslator.FileUtility;
 import com.example.mobiletranslator.ImageParser;
+import com.example.mobiletranslator.LocalDataManager;
 import com.example.mobiletranslator.R;
 import com.example.mobiletranslator.TranslatorManager;
 import com.example.mobiletranslator.db.DbManager;
@@ -47,35 +48,37 @@ public class FragmentOriginalText extends Fragment {
 
     private final ArrayList<HashMap<String,Object>> languageDataListIn = new ArrayList<>();
     private final ArrayList<HashMap<String,Object>> languageDataListOut = new ArrayList<>();
-    private String currentIsoIn;
-    private String currentIsoOut;
+    private int langInIdx;
+    private int langOutIdx;
     private boolean useFormal;
 
     private final ActivityResultLauncher<Intent> retrieveImageActivityResult = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                ImageParser ip = new ImageParser(getView().getContext());
-
                 try {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent intent = result.getData();
+                        String langIso3 = Objects.requireNonNull(languageDataListIn.get(langInIdx).get(DbManager.LANG_PARAM_ISO3)).toString();
+                        LocalDataManager ldm = new LocalDataManager(getContext());
 
-                        ip.loadLanguage("eng");
-                        EditText textField = getView().findViewById(R.id.textInputField);
+                        if(ldm.checkOcrFile(langIso3)) {
+                            ImageParser ip = new ImageParser(getContext(),langIso3);
+                            EditText textField = getView().findViewById(R.id.textInputField);
 
-                        if (intent != null && intent.getData() != null) {
-                            textField.setText(ip.parseUri(intent.getData()));
+                            if (intent != null && intent.getData() != null) {
+                                textField.setText(ip.parseUri(intent.getData()));
+                            } else if (fileUri != null) {
+                                textField.setText(ip.parseUri(fileUri));
+                            }
                         }
-                        else if(fileUri != null){
-                            textField.setText(ip.parseUri(fileUri));
+                        else{
+                            ldm.downloadOcrFile(langIso3);
+                            SnackBarUtility.displayMessage(getActivity(), "Local file not found. Downloading", SnackBarUtility.INFO);
                         }
                     }
                 }
                 catch(AppException e){
                     SnackBarUtility.displayMessage(getActivity(),e);
-                }
-                finally {
-                    ip.recycle();
                 }
             });
 
@@ -193,7 +196,7 @@ public class FragmentOriginalText extends Fragment {
         spinnerIn.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                currentIsoIn = Objects.requireNonNull(languageDataListIn.get(position).get(DbManager.LANG_PARAM_ISO)).toString();
+                langInIdx = position;
             }
 
             @Override
@@ -203,7 +206,7 @@ public class FragmentOriginalText extends Fragment {
         spinnerOut.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                currentIsoOut = Objects.requireNonNull(languageDataListOut.get(position).get(DbManager.LANG_PARAM_ISO)).toString();
+                langOutIdx = position;
                 int showFormalCheckbox = (Integer) Objects.requireNonNull(languageDataListOut.get(position).get(DbManager.LANG_PARAM_FORMAL));
 
                 CheckBox formalCheckbox = getView().findViewById(R.id.checkUseFormal);
@@ -227,6 +230,8 @@ public class FragmentOriginalText extends Fragment {
         //Translate button
         translateBtn.setOnClickListener(onClickTranslate -> {
             try {
+                String currentIsoIn = Objects.requireNonNull(languageDataListIn.get(langInIdx).get(DbManager.LANG_PARAM_ISO)).toString();
+                String currentIsoOut = Objects.requireNonNull(languageDataListOut.get(langOutIdx).get(DbManager.LANG_PARAM_ISO)).toString();
                 TranslatorManager tm = new TranslatorManager(getView().getContext());
                 String translatedText = tm.translate(textField.getText().toString(), currentIsoIn, currentIsoOut, useFormal);
                 Bundle result = new Bundle();

@@ -41,46 +41,21 @@ public class ImageParser {
     private static final int BRIGHTNESS = 0; //-255...255 default is 0
     private static final int LIGHTNESS_THRESHOLD = 64; //0...255 default is 64
 
-    public ImageParser(Context context){
-        this.tess = new TessBaseAPI();
+    public ImageParser(Context context, String langIso3) throws AppException{
+        tess = new TessBaseAPI();
         this.context = context;
-        this.tess.setVariable("user_defined_dpi", "300");
+        tess.setVariable("user_defined_dpi", "300");
 
-        dataFolder = context.getExternalFilesDir(null).getAbsolutePath();
+        LocalDataManager ldm = new LocalDataManager(context);
+        dataFolder = ldm.getFileDirPath();
 
-        OpenCVLoader.initDebug();
-    }
-
-    public void loadLanguage(String language) throws AppException{
         try {
-            File tessDir = new File(dataFolder, "tessdata");
-            boolean mkdirResult = true;
-
-            if (!tessDir.exists()) {
-                mkdirResult = tessDir.mkdir();
-            }
-
-            if(mkdirResult) {
-
-                //TODO: edit file checks
-                File engFile = new File(tessDir, "eng.traineddata");
-                if (!engFile.exists()) {
-                    AssetManager am = context.getAssets();
-                    FileUtility.copyAssetFile(am, "eng.traineddata", engFile);
-                }
-
-                initialized = tess.init(dataFolder, language);
-                if (!initialized) {
-                    tess.recycle();
-                }
-            }
-            else{
-                tess.recycle();
-                throw new AppException("Check write permissions");
-            }
+            tess.init(dataFolder, langIso3);
+            OpenCVLoader.initDebug();
         }
-        catch(IOException e){
-            throw new AppException(e);
+        catch(IllegalStateException e){
+            tess.recycle();
+            throw new AppException(e, "creation failed");
         }
     }
 
@@ -160,7 +135,8 @@ public class ImageParser {
     public String parseImg(Bitmap img){
         Bitmap optimizedImage = optimizeImage(img);
         tess.setImage(optimizedImage);
-        return tess.getUTF8Text();
+        String text = tess.getUTF8Text();
+        return text;
     }
 
     public String parseUri(Uri uri) throws AppException{

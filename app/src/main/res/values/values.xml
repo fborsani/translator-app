@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ocr_trained_data_url_fast" translatable="false">https://github.com/tesseract-ocr/tessdata_fast/raw/main</string>
+    <string name="ocr_trained_data_url_best" translatable="false">https://github.com/tesseract-ocr/tessdata_best/raw/main</string>
+</resources>
