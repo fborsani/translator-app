@@ -36,6 +36,7 @@ import com.example.mobiletranslator.LocalDataManager;
 import com.example.mobiletranslator.R;
 import com.example.mobiletranslator.TranslatorManager;
 import com.example.mobiletranslator.db.DbManager;
+import com.example.mobiletranslator.db.LanguageItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -46,8 +47,8 @@ import java.util.Objects;
 public class FragmentOriginalText extends Fragment {
     private Uri fileUri;
 
-    private final ArrayList<HashMap<String,Object>> languageDataListIn = new ArrayList<>();
-    private final ArrayList<HashMap<String,Object>> languageDataListOut = new ArrayList<>();
+    private  ArrayList<LanguageItem> languageDataListIn = new ArrayList<>();
+    private  ArrayList<LanguageItem> languageDataListOut = new ArrayList<>();
     private int langInIdx;
     private int langOutIdx;
     private boolean useFormal;
@@ -58,7 +59,7 @@ public class FragmentOriginalText extends Fragment {
                 try {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent intent = result.getData();
-                        String langIso3 = Objects.requireNonNull(languageDataListIn.get(langInIdx).get(DbManager.LANG_PARAM_ISO3)).toString();
+                        String langIso3 = languageDataListIn.get(langInIdx).getIsoCode3();
                         LocalDataManager ldm = new LocalDataManager(getContext());
 
                         if(ldm.checkOcrFile(langIso3)) {
@@ -181,13 +182,13 @@ public class FragmentOriginalText extends Fragment {
 
         //Set values for language spinners
         final DbManager dbm = new DbManager(getView().getContext());
-        ArrayList<String> labelsIn = dbm.getLanguagesIn(languageDataListIn);
-        ArrayList<String> labelsOut = dbm.getLanguagesOut(languageDataListOut);
+        languageDataListIn = dbm.getLanguagesIn();
+        languageDataListOut = dbm.getLanguagesOut();
 
-        ArrayAdapter<String> adapterIn = new ArrayAdapter<>(getView().getContext(), android.R.layout.simple_spinner_item, labelsIn);
+        ArrayAdapter<LanguageItem> adapterIn = new ArrayAdapter<>(getView().getContext(), android.R.layout.simple_spinner_item, languageDataListIn);
         adapterIn.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        ArrayAdapter<String> adapterOut = new ArrayAdapter<>(getView().getContext(), android.R.layout.simple_spinner_item, labelsOut);
+        ArrayAdapter<LanguageItem> adapterOut = new ArrayAdapter<>(getView().getContext(), android.R.layout.simple_spinner_item, languageDataListOut);
         adapterOut.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerIn.setAdapter(adapterIn);
@@ -207,10 +208,9 @@ public class FragmentOriginalText extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 langOutIdx = position;
-                int showFormalCheckbox = (Integer) Objects.requireNonNull(languageDataListOut.get(position).get(DbManager.LANG_PARAM_FORMAL));
 
                 CheckBox formalCheckbox = getView().findViewById(R.id.checkUseFormal);
-                if(showFormalCheckbox == 1){
+                if(languageDataListOut.get(position).isAllowFormal()){
                     formalCheckbox.setVisibility(View.VISIBLE);
                 }
                 else{
@@ -230,8 +230,8 @@ public class FragmentOriginalText extends Fragment {
         //Translate button
         translateBtn.setOnClickListener(onClickTranslate -> {
             try {
-                String currentIsoIn = Objects.requireNonNull(languageDataListIn.get(langInIdx).get(DbManager.LANG_PARAM_ISO)).toString();
-                String currentIsoOut = Objects.requireNonNull(languageDataListOut.get(langOutIdx).get(DbManager.LANG_PARAM_ISO)).toString();
+                String currentIsoIn = languageDataListIn.get(langInIdx).getIsoCode();
+                String currentIsoOut = languageDataListOut.get(langOutIdx).getIsoCode();
                 TranslatorManager tm = new TranslatorManager(getView().getContext());
                 String translatedText = tm.translate(textField.getText().toString(), currentIsoIn, currentIsoOut, useFormal);
                 Bundle result = new Bundle();

@@ -65,4 +65,9 @@ public class LocalDataManager {
         String filename = dbm.getOcrFile(langIso3);
         return checkFile(OCR_FOLDER,filename);
     }
+
+    public boolean deleteFile(String subfolder, String filename){
+        File file = new File(filesDir+"/"+subfolder, filename);
+        return file.delete();
+    }
 }

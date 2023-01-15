@@ -71,6 +71,10 @@ public class LanguageItem {
         return downloaded? 1: 0;
     }
 
+    @NonNull
+    @Override
+    public String toString(){ return name; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -80,7 +84,5 @@ public class LanguageItem {
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(name, isoCode, allowFormal, downloaded);
-    }
+    public int hashCode() { return Objects.hash(name, isoCode, allowFormal, downloaded); }
 }
