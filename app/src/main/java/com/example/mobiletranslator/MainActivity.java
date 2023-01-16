@@ -1,16 +1,47 @@
 package com.example.mobiletranslator;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mobiletranslator.ui.TabsFragmentAdapter;
+import com.example.mobiletranslator.ui.FragmentConfig;
+import com.example.mobiletranslator.ui.FragmentOriginalText;
+import com.example.mobiletranslator.ui.FragmentTranslatedText;
 import com.google.android.material.tabs.TabLayout;
+
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.Lifecycle;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.os.Bundle;
 
 
 public class MainActivity extends AppCompatActivity {
+    private class TabsFragmentAdapter extends FragmentStateAdapter {
+
+        public TabsFragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
+            super(fragmentManager, lifecycle);
+        }
+
+        @NonNull
+        @Override
+        public Fragment createFragment(int position) {
+            switch(position){
+                case 0:
+                    return new FragmentOriginalText();
+                case 1:
+                    return new FragmentTranslatedText();
+                default:
+                    return new FragmentConfig();
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return 3;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

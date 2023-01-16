@@ -40,8 +40,7 @@ import com.example.mobiletranslator.db.LanguageItem;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
+
 
 
 public class FragmentOriginalText extends Fragment {
