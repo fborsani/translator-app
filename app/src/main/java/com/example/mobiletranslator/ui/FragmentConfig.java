@@ -1,6 +1,5 @@
 package com.example.mobiletranslator.ui;
 
-import android.content.Context;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,11 +18,9 @@ import com.google.android.material.tabs.TabLayout;
 
 public class FragmentConfig extends Fragment {
     private static class TabsFragmentAdapter extends FragmentStateAdapter {
-        private View view;
 
-        public TabsFragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle, View view) {
+        public TabsFragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
             super(fragmentManager, lifecycle);
-            this.view = view;
         }
 
         @NonNull
@@ -62,7 +59,7 @@ public class FragmentConfig extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         FragmentManager fm = getActivity().getSupportFragmentManager();
-        FragmentConfig.TabsFragmentAdapter sa = new FragmentConfig.TabsFragmentAdapter(fm, getLifecycle(), view);
+        FragmentConfig.TabsFragmentAdapter sa = new FragmentConfig.TabsFragmentAdapter(fm, getLifecycle());
         final ViewPager2 pa = getView().findViewById(R.id.pagerConfig);
         pa.setAdapter(sa);
 

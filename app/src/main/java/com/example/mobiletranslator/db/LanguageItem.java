@@ -59,10 +59,6 @@ public class LanguageItem {
         return allowFormal;
     }
 
-    public boolean isDownloaded() {
-        return downloaded;
-    }
-
     public int isAllowFormalInt() {
         return allowFormal? 1: 0;
     }

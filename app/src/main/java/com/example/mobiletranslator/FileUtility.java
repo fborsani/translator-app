@@ -1,6 +1,5 @@
 package com.example.mobiletranslator;
 
-import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -20,11 +19,9 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -112,16 +109,6 @@ public class FileUtility {
         File tempFile = File.createTempFile(name, ".jpg", context.getFilesDir());
         String authority = context.getApplicationContext().getPackageName() + ".provider";
         return FileProvider.getUriForFile(context, authority, tempFile);
-    }
-
-    public static void copyAssetFile(@NonNull AssetManager am, @NonNull String assetName, @NonNull File outFile) throws IOException {
-        InputStream in = am.open(assetName);
-        OutputStream out = new FileOutputStream(outFile);
-        byte[] buffer = new byte[1024];
-        int read;
-        while ((read = in.read(buffer)) != -1) {
-            out.write(buffer, 0, read);
-        }
     }
 
     public static InputStream copyAssetFile(@NonNull AssetManager am, @NonNull String assetName) throws IOException{

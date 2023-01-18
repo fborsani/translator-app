@@ -5,7 +5,6 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.net.Uri;
 
-import com.example.mobiletranslator.db.DbManager;
 import com.example.mobiletranslator.ui.NotificationUtility;
 
 import java.io.File;
@@ -14,14 +13,12 @@ public class LocalDataManager {
     private final File filesDir;
     private final DownloadManager downloadManager;
     private final Context context;
-    private final DbManager dbm;
     private final String ocrDownloadUrl;
 
     public static final String OCR_FOLDER = "tessdata";
 
     public LocalDataManager(Context context){
         this.context = context;
-        dbm = new DbManager(context);
         filesDir = context.getExternalFilesDir(null);
         downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
         ocrDownloadUrl = context.getResources().getString(R.string.ocr_trained_data_url_best);
@@ -84,8 +81,6 @@ public class LocalDataManager {
 
     public void deleteFile(String subfolder, String filename, Activity activity){
         final File file = new File(filesDir+"/"+subfolder, filename);
-        NotificationUtility.displayConfirmDialog(activity, "Delete file?", (dialogInterface, i) -> {
-            file.delete();
-        });
+        NotificationUtility.displayConfirmDialog(activity, "Delete file?", (dialogInterface, i) -> file.delete());
     }
 }

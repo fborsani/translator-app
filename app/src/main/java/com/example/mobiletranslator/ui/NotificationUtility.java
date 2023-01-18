@@ -13,7 +13,6 @@ import com.google.android.material.snackbar.Snackbar;
 public class NotificationUtility {
     public static int SUCCESS = 0;
     public static int ERROR = 1;
-    public static int INFO = 2;
 
     public static void displayConfirmDialog(Activity activity, String message, DialogInterface.OnClickListener successEvent){
         Resources resources = activity.getApplicationContext().getResources();
@@ -44,7 +43,6 @@ public class NotificationUtility {
                 bgColor = Color.RED;
                 textColor = Color.WHITE;
                 break;
-            case 2:
             default:
                 bgColor = Color.BLUE;
                 textColor = Color.WHITE;
