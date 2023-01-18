@@ -1,5 +1,6 @@
 package com.example.mobiletranslator.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,7 +11,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.mobiletranslator.AppException;
 import com.example.mobiletranslator.LocalDataManager;
 import com.example.mobiletranslator.R;
 import com.example.mobiletranslator.db.LanguageItem;
@@ -20,6 +20,7 @@ import java.util.ArrayList;
 public class FilesRecyclerViewAdapter extends RecyclerView.Adapter<FilesRecyclerViewAdapter.ViewHolder> {
     private final ArrayList<LanguageItem> languageList;
     private final LocalDataManager ldm;
+    private final Activity fatherActivity;
 
     private class OnClickDelete implements View.OnClickListener{
         private final int position;
@@ -31,7 +32,7 @@ public class FilesRecyclerViewAdapter extends RecyclerView.Adapter<FilesRecycler
 
         @Override
         public void onClick(View view) {
-            ldm.deleteFile(LocalDataManager.OCR_FOLDER, languageList.get(position).getFilename());
+            ldm.deleteFile(LocalDataManager.OCR_FOLDER, languageList.get(position).getFilename(), fatherActivity);
         }
     }
 
@@ -44,15 +45,15 @@ public class FilesRecyclerViewAdapter extends RecyclerView.Adapter<FilesRecycler
         }
         @Override
         public void onClick(View view) {
-            try {
-                ldm.downloadOcrFile(languageList.get(position).getIsoCode3());
-            } catch (AppException e) {
-                e.printStackTrace();
-            }
+            ldm.downloadFileConfirmDialog(
+                    languageList.get(position).getIsoCode3(),
+                    LocalDataManager.OCR_FOLDER,
+                    ldm.getOcrDownloadUri(),
+                    fatherActivity);
         }
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final TextView languageTextView;
         private final ImageButton downloadBtn, deleteBtn;
 
@@ -84,9 +85,10 @@ public class FilesRecyclerViewAdapter extends RecyclerView.Adapter<FilesRecycler
         }
     }
 
-    FilesRecyclerViewAdapter(Context context, ArrayList<LanguageItem> languageList){
+    FilesRecyclerViewAdapter(Activity fatherActivity, ArrayList<LanguageItem> languageList){
         this.languageList = languageList;
-        ldm = new LocalDataManager(context);
+        this.fatherActivity = fatherActivity;
+        ldm = new LocalDataManager(fatherActivity.getApplicationContext());
     }
 
     @NonNull

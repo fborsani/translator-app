@@ -33,7 +33,13 @@
     <string name="label_plan_free">FREE</string>
     <string name="label_usage_unlimited">Unlimited</string>
     <string name="label_apikey_invalid">INVALID</string>
-    <string name="label_apikey_over_limit">USAGE EXCEDED</string>
+    <string name="label_apikey_over_limit">USAGE EXCEEDED</string>
     <string name="label_apikey_valid">VALID</string>
-    <string name="label_usage_perc">Charaters used (%):</string>
+    <string name="label_usage_perc">Characters used (%):</string>
+    <string name="dialog_confirm_download_generic">Download the selected file?</string>
+    <string name="dialog_confirm_download_ocr">The data file for the %1$s language is not installed.\nThis file is required to perform character recognition operations.\nDo you want to download it now?</string>
+    <string name="dialog_confirm_delete_generic">Delete file?</string>
+    <string name="dialog_title_generic">Confirm</string>
+    <string name="dialog_action_confirm">Confirm</string>
+    <string name="dialog_action_cancel">Cancel</string>
 </resources>

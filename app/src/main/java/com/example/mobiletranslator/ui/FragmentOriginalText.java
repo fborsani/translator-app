@@ -58,11 +58,11 @@ public class FragmentOriginalText extends Fragment {
                 try {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent intent = result.getData();
-                        String langIso3 = languageDataListIn.get(langInIdx).getIsoCode3();
+                        LanguageItem item = languageDataListIn.get(langInIdx);
                         LocalDataManager ldm = new LocalDataManager(getContext());
 
-                        if(ldm.checkOcrFile(langIso3)) {
-                            ImageParser ip = new ImageParser(getContext(),langIso3);
+                        if(ldm.checkFile(LocalDataManager.OCR_FOLDER, item.getFilename())) {
+                            ImageParser ip = new ImageParser(getContext(),item.getIsoCode3());
                             EditText textField = getView().findViewById(R.id.textInputField);
 
                             if (intent != null && intent.getData() != null) {
@@ -72,13 +72,18 @@ public class FragmentOriginalText extends Fragment {
                             }
                         }
                         else{
-                            ldm.downloadOcrFile(langIso3);
-                            SnackBarUtility.displayMessage(getActivity(), "Local file not found. Downloading", SnackBarUtility.INFO);
+                            String message = getView().getResources().getString(R.string.dialog_confirm_download_ocr);
+                            ldm.downloadFileConfirmDialog(
+                                    item.getFilename(),
+                                    LocalDataManager.OCR_FOLDER,
+                                    ldm.getOcrDownloadUri(),
+                                    getActivity(),
+                                    String.format(message,item.getName()));
                         }
                     }
                 }
                 catch(AppException e){
-                    SnackBarUtility.displayMessage(getActivity(),e);
+                    NotificationUtility.displayMessage(getActivity(),e);
                 }
             });
 
@@ -93,7 +98,7 @@ public class FragmentOriginalText extends Fragment {
                     }
                 }
                 catch(IOException | NullPointerException e){
-                    SnackBarUtility.displayMessage(getActivity(),e.getMessage(), SnackBarUtility.ERROR);
+                    NotificationUtility.displayMessage(getActivity(),e.getMessage(), NotificationUtility.ERROR);
                 }
             });
 
@@ -157,7 +162,7 @@ public class FragmentOriginalText extends Fragment {
                 retrieveImageActivityResult.launch(intent);
             }
             catch(IOException e){
-                SnackBarUtility.displayMessage(getActivity(), e.getMessage(), SnackBarUtility.ERROR);
+                NotificationUtility.displayMessage(getActivity(), e.getMessage(), NotificationUtility.ERROR);
             }
         });
 
@@ -167,14 +172,14 @@ public class FragmentOriginalText extends Fragment {
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
                 if(item.getText() != null){
                     textField.setText(item.getText().toString());
-                    SnackBarUtility.displayMessage(getActivity(),"Text pasted",SnackBarUtility.SUCCESS);
+                    NotificationUtility.displayMessage(getActivity(),"Text pasted", NotificationUtility.SUCCESS);
                 }
                 else{
-                    SnackBarUtility.displayMessage(getActivity(),"Clipboard content is not plain text",SnackBarUtility.ERROR);
+                    NotificationUtility.displayMessage(getActivity(),"Clipboard content is not plain text", NotificationUtility.ERROR);
                 }
             }
             else{
-                SnackBarUtility.displayMessage(getActivity(),"Nothing to copy",SnackBarUtility.ERROR);
+                NotificationUtility.displayMessage(getActivity(),"Nothing to copy", NotificationUtility.ERROR);
             }
         });
 
@@ -229,17 +234,23 @@ public class FragmentOriginalText extends Fragment {
         //Translate button
         translateBtn.setOnClickListener(onClickTranslate -> {
             try {
-                String currentIsoIn = languageDataListIn.get(langInIdx).getIsoCode();
-                String currentIsoOut = languageDataListOut.get(langOutIdx).getIsoCode();
-                TranslatorManager tm = new TranslatorManager(getView().getContext());
-                String translatedText = tm.translate(textField.getText().toString(), currentIsoIn, currentIsoOut, useFormal);
-                Bundle result = new Bundle();
-                result.putString("translatedText", translatedText);
-                getParentFragmentManager().setFragmentResult("translationFragment", result);
-                SnackBarUtility.displayMessage(getActivity(),"Translation completed",SnackBarUtility.SUCCESS);
+                String text = textField.getText().toString();
+                if(!text.trim().equals("")) {
+                    String currentIsoIn = languageDataListIn.get(langInIdx).getIsoCode();
+                    String currentIsoOut = languageDataListOut.get(langOutIdx).getIsoCode();
+                    TranslatorManager tm = new TranslatorManager(getView().getContext());
+                    String translatedText = tm.translate(textField.getText().toString(), currentIsoIn, currentIsoOut, useFormal);
+                    Bundle result = new Bundle();
+                    result.putString("translatedText", translatedText);
+                    getParentFragmentManager().setFragmentResult("translationFragment", result);
+                    NotificationUtility.displayMessage(getActivity(), "Translation completed", NotificationUtility.SUCCESS);
+                }
+                else{
+                    NotificationUtility.displayMessage(getActivity(), "Text field is empty", NotificationUtility.ERROR);
+                }
             }
             catch(AppException e){
-                SnackBarUtility.displayMessage(getActivity(), e);
+                NotificationUtility.displayMessage(getActivity(), e);
             }
         });
 

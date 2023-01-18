@@ -56,11 +56,11 @@ public class FragmentConfigApiKey extends Fragment {
             percentField.setText(percent);
 
             if(showMsg) {
-                SnackBarUtility.displayMessage(getActivity(), "Key is valid", SnackBarUtility.SUCCESS);
+                NotificationUtility.displayMessage(getActivity(), "Key is valid", NotificationUtility.SUCCESS);
             }
         }
         catch(AppException e){
-            SnackBarUtility.displayMessage(getActivity(),e);
+            NotificationUtility.displayMessage(getActivity(),e);
         }
     }
 

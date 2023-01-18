@@ -46,7 +46,7 @@ public class FragmentTranslatedText extends Fragment {
             ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
             ClipData clip = ClipData.newPlainText("Translated Text", text);
             clipboard.setPrimaryClip(clip);
-            SnackBarUtility.displayMessage(getActivity(),"Saved to clipboard",SnackBarUtility.SUCCESS);
+            NotificationUtility.displayMessage(getActivity(),"Saved to clipboard", NotificationUtility.SUCCESS);
         });
 
         clearBtn.setOnClickListener(onClickClear -> textField.setText(""));

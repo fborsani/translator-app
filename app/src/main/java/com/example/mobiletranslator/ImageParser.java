@@ -1,7 +1,6 @@
 package com.example.mobiletranslator;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,11 +9,9 @@ import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 
 import android.net.Uri;
-import android.os.Environment;
 
 import com.googlecode.tesseract.android.TessBaseAPI;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -30,7 +27,6 @@ import org.opencv.imgproc.Imgproc;
 public class ImageParser {
     private final TessBaseAPI tess;
     private final Context context;
-    private final String dataFolder;
     private boolean initialized;
 
     private static final int IMG_SIZE_LONG = 2048;
@@ -47,7 +43,7 @@ public class ImageParser {
         tess.setVariable("user_defined_dpi", "300");
 
         LocalDataManager ldm = new LocalDataManager(context);
-        dataFolder = ldm.getFileDirPath();
+        String dataFolder = ldm.getFileDirPath();
 
         try {
             tess.init(dataFolder, langIso3);
@@ -135,8 +131,7 @@ public class ImageParser {
     public String parseImg(Bitmap img){
         Bitmap optimizedImage = optimizeImage(img);
         tess.setImage(optimizedImage);
-        String text = tess.getUTF8Text();
-        return text;
+        return tess.getUTF8Text();
     }
 
     public String parseUri(Uri uri) throws AppException{
