@@ -71,8 +71,7 @@ public class DbManager {
                     cursor.getString(colIso3),
                     cursor.getString(colVisibility),
                     cursor.getString(colFilename),
-                    cursor.getInt(colFormal) > 0,
-                    false));
+                    cursor.getInt(colFormal) > 0));
             } while (cursor.moveToNext());
         }
         cursor.close();

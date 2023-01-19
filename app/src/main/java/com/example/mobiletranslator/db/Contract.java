@@ -19,7 +19,6 @@ public final class Contract {
         public static final String COLUMN_NAME_VISIBILITY = "visibility";
         public static final String COLUMN_NAME_SUPPORT_FORMAL = "support_formal";
         public static final String COLUMN_OCR_FILENAME = "ocr_filename";
-        public static final String COLUMN_NAME_INSTALLED = "installed";
     }
 
     public static class LanguageOptionVisibility{

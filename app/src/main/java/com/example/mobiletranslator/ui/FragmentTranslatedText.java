@@ -1,8 +1,10 @@
 package com.example.mobiletranslator.ui;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -31,9 +33,12 @@ public class FragmentTranslatedText extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final EditText textField = getView().findViewById(R.id.translatedTextField);
-        final Button sendToClipboardBtn = getView().findViewById(R.id.sendToClipboardBtn);
-        final Button clearBtn = getView().findViewById(R.id.clearBtn);
+        final Activity activity = requireActivity();
+        final Resources resources = view.getResources();
+
+        final EditText textField = view.findViewById(R.id.translatedTextField);
+        final Button sendToClipboardBtn = view.findViewById(R.id.sendToClipboardBtn);
+        final Button clearBtn = view.findViewById(R.id.clearBtn);
 
         //Receive results from FragmentOriginalText
         getParentFragmentManager().setFragmentResultListener("translationFragment", this,
@@ -43,10 +48,12 @@ public class FragmentTranslatedText extends Fragment {
         //Buttons
         sendToClipboardBtn.setOnClickListener(onClickClipboard -> {
             String text = textField.getText().toString();
-            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("Translated Text", text);
+            ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipData clip = ClipData.newPlainText(resources.getString(R.string.clipboard_entry_name), text);
             clipboard.setPrimaryClip(clip);
-            NotificationUtility.displayMessage(getActivity(),"Saved to clipboard", NotificationUtility.SUCCESS);
+            NotificationUtility.displayMessage(activity,
+                    resources.getString(R.string.action_export_clipboard_done),
+                    NotificationUtility.snackBarStyle.SUCCESS);
         });
 
         clearBtn.setOnClickListener(onClickClear -> textField.setText(""));

@@ -58,12 +58,12 @@ public class FragmentConfig extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = requireActivity().getSupportFragmentManager();
         FragmentConfig.TabsFragmentAdapter sa = new FragmentConfig.TabsFragmentAdapter(fm, getLifecycle());
-        final ViewPager2 pa = getView().findViewById(R.id.pagerConfig);
+        final ViewPager2 pa = view.findViewById(R.id.pagerConfig);
         pa.setAdapter(sa);
 
-        TabLayout tabLayout = getView().findViewById(R.id.tabLayoutConfig);
+        TabLayout tabLayout = view.findViewById(R.id.tabLayoutConfig);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

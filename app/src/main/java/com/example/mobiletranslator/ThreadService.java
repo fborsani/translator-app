@@ -1,4 +1,8 @@
 package com.example.mobiletranslator;
+
+import com.example.mobiletranslator.ui.NotificationUtility.CauseCode;
+
+import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -13,10 +17,11 @@ public final class ThreadService {
             return result.get();
         }
         catch (ExecutionException e) {
-            throw new AppException(e.getCause());
+            AppException cause = (AppException) Objects.requireNonNull(e.getCause());
+            throw new AppException(e.getCause(), cause.getCauseCode());
         }
         catch (InterruptedException e) {
-            throw new AppException(e);
+            throw new AppException(e, CauseCode.THREAD_INTERRUPTED);
         }
     }
 }

@@ -30,10 +30,10 @@ public class FragmentConfigFiles extends Fragment {
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final RecyclerView filesList = getView().findViewById(R.id.filesList);
-        final DbManager dbm = new DbManager(getView().getContext());
+        final RecyclerView filesList = view.findViewById(R.id.filesList);
+        final DbManager dbm = new DbManager(view.getContext());
 
-        FilesRecyclerViewAdapter adapter = new FilesRecyclerViewAdapter(getActivity(), dbm.getLanguagesIn());
+        FilesRecyclerViewAdapter adapter = new FilesRecyclerViewAdapter(requireActivity(), dbm.getLanguagesIn());
         filesList.setAdapter(adapter);
         filesList.setLayoutManager(new LinearLayoutManager(getContext()));
     }

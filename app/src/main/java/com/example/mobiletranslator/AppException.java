@@ -1,15 +1,19 @@
 package com.example.mobiletranslator;
 
-public class AppException extends Throwable {
-    public AppException(String msg){
-        super(msg);
+import com.example.mobiletranslator.ui.NotificationUtility.CauseCode;
+
+public class AppException extends Exception {
+    private final CauseCode causeCode;
+
+    public AppException(CauseCode causeCode) {
+        super();
+        this.causeCode = causeCode;
     }
 
-    public AppException(Throwable cause, String msg){
-        super(msg,cause);
-    }
-
-    public AppException(Throwable cause){
+    public AppException(Throwable cause, CauseCode causeCode){
         super(cause);
+        this.causeCode = causeCode;
     }
+
+    public CauseCode getCauseCode(){ return causeCode; }
 }

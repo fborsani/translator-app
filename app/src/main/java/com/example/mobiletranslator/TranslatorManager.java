@@ -8,6 +8,7 @@ import com.deepl.api.SentenceSplittingMode;
 import com.deepl.api.TextTranslationOptions;
 import com.deepl.api.Translator;
 import com.example.mobiletranslator.db.DbManager;
+import com.example.mobiletranslator.ui.NotificationUtility.CauseCode;
 
 import java.util.concurrent.Callable;
 
@@ -30,15 +31,20 @@ public class TranslatorManager {
         }
 
         @Override
-        public String call() throws DeepLException, InterruptedException{
-            TextTranslationOptions options = new TextTranslationOptions();
-            options.setSentenceSplittingMode(SentenceSplittingMode.NoNewlines);
+        public String call() throws AppException, InterruptedException{
+            try {
+                TextTranslationOptions options = new TextTranslationOptions();
+                options.setSentenceSplittingMode(SentenceSplittingMode.NoNewlines);
 
-            if(useFormal){
-                options.setFormality(Formality.More);
+                if(useFormal){
+                    options.setFormality(Formality.More);
+                }
+
+                return translator.translateText(text, langFrom, langTo, options).getText();
+
+            } catch (DeepLException e) {
+                throw new AppException(e, CauseCode.TRANSLATION_FAILED);
             }
-
-            return translator.translateText(text, langFrom, langTo, options).getText();
         }
     }
 
@@ -50,8 +56,12 @@ public class TranslatorManager {
         }
 
         @Override
-        public UsageData call() throws DeepLException, InterruptedException {
-            return new UsageData(translator.getUsage());
+        public UsageData call() throws AppException, InterruptedException {
+            try {
+                return new UsageData(translator.getUsage());
+            } catch (DeepLException e) {
+                throw new AppException(e, CauseCode.TRANSLATION_FAILED);
+            }
         }
     }
 
@@ -62,7 +72,7 @@ public class TranslatorManager {
             translator = new Translator(apiKey);
         }
         else{
-            throw new AppException("Api key is not defined");
+            throw new AppException(CauseCode.MISSING_API_KEY);
         }
     }
 

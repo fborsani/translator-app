@@ -56,11 +56,13 @@ public class FragmentConfigApiKey extends Fragment {
             percentField.setText(percent);
 
             if(showMsg) {
-                NotificationUtility.displayMessage(getActivity(), "Key is valid", NotificationUtility.SUCCESS);
+                NotificationUtility.displayMessage(requireActivity(),
+                        resources.getString(R.string.action_test_connection_done),
+                        NotificationUtility.snackBarStyle.SUCCESS);
             }
         }
         catch(AppException e){
-            NotificationUtility.displayMessage(getActivity(),e);
+            NotificationUtility.displayMessage(requireActivity(),e);
         }
     }
 
@@ -82,25 +84,25 @@ public class FragmentConfigApiKey extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //list of references to layout elements
-        final EditText apiKeyField = getView().findViewById(R.id.apiKeyField);
-        final Button getUsageStatsBtn = getView().findViewById(R.id.getUsageStatsBtn);
-        final Button saveApiKeyBtn = getView().findViewById(R.id.saveApiKeyBtn);
+        final EditText apiKeyField = view.findViewById(R.id.apiKeyField);
+        final Button getUsageStatsBtn = view.findViewById(R.id.getUsageStatsBtn);
+        final Button saveApiKeyBtn = view.findViewById(R.id.saveApiKeyBtn);
 
-        final DbManager dbm = new DbManager(getView().getContext());
+        final DbManager dbm = new DbManager(view.getContext());
 
         //buttons functionality
         apiKeyField.setText(dbm.getApiKey());
 
         saveApiKeyBtn.setOnClickListener(vSave -> {
             dbm.setApiKey(apiKeyField.getText().toString());
-            printUserData(getView(), true);
+            printUserData(view, true);
         });
 
-        getUsageStatsBtn.setOnClickListener(vStats -> printUserData(getView(), true));
+        getUsageStatsBtn.setOnClickListener(vStats -> printUserData(view, true));
 
         //preload api key info fields
         if(apiKeyField.getText() != null && !apiKeyField.getText().toString().trim().isEmpty()){
-            printUserData(getView(), false);
+            printUserData(view, false);
         }
     }
 

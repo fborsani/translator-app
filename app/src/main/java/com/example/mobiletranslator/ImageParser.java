@@ -10,6 +10,7 @@ import android.graphics.Paint;
 
 import android.net.Uri;
 
+import com.example.mobiletranslator.ui.NotificationUtility.CauseCode;
 import com.googlecode.tesseract.android.TessBaseAPI;
 
 import java.io.IOException;
@@ -27,7 +28,6 @@ import org.opencv.imgproc.Imgproc;
 public class ImageParser {
     private final TessBaseAPI tess;
     private final Context context;
-    private boolean initialized;
 
     private static final int IMG_SIZE_LONG = 2048;
     private static final int IMG_SIZE_SHORT = 1024;
@@ -51,12 +51,8 @@ public class ImageParser {
         }
         catch(IllegalStateException e){
             tess.recycle();
-            throw new AppException(e, "creation failed");
+            throw new AppException(e, CauseCode.IMAGE_PARSER_INIT_FAILED);
         }
-    }
-
-    public boolean isInitialized(){
-        return initialized;
     }
 
     public Bitmap optimizeImage(Bitmap img){
@@ -140,12 +136,7 @@ public class ImageParser {
             bmp = FileUtility.createBmp(uri,context);
             return parseImg(bmp);
         } catch (IOException e) {
-            throw new AppException(e);
+            throw new AppException(e, CauseCode.IMAGE_CREATION_FAILED);
         }
-    }
-
-    public void recycle() {
-        tess.recycle();
-        initialized = false;
     }
 }

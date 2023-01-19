@@ -18,7 +18,7 @@ import android.os.Bundle;
 
 
 public class MainActivity extends AppCompatActivity {
-    private class TabsFragmentAdapter extends FragmentStateAdapter {
+    private static class TabsFragmentAdapter extends FragmentStateAdapter {
 
         public TabsFragmentAdapter(@NonNull FragmentManager fragmentManager, @NonNull Lifecycle lifecycle) {
             super(fragmentManager, lifecycle);

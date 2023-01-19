@@ -1,5 +1,6 @@
 package com.example.mobiletranslator;
 
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
@@ -28,17 +29,16 @@ import java.util.Date;
 
 import com.example.mobiletranslator.db.LanguageItem;
 
-public class FileUtility {
-    public static final String SQL_LANGUAGE_DATA_FILE = "languages.xml";
+public final class FileUtility {
 
     private FileUtility(){}
 
-    public static Intent createIntentGetImage(){
-        return createIntent("image/*","Select gallery app",true);
+    public static Intent createIntentGetImage(String title){
+        return createIntent("image/*", title,true);
     }
 
-    public static Intent createIntentGetText(){
-        return createIntent("text/plain","Select file manager",false);
+    public static Intent createIntentGetText(String title){
+        return createIntent("text/plain", title,false);
     }
 
     public static String readFile(Uri uri, ContentResolver cr) throws IOException{
@@ -103,6 +103,7 @@ public class FileUtility {
         return Bitmap.createBitmap(img, 0, 0, img.getWidth(), img.getHeight(), matrix, true);
     }
 
+    @SuppressLint("SimpleDateFormat")
     public static Uri createTempImageUri(Context context) throws IOException {
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String name = "IMG_" + timestamp;
@@ -116,7 +117,7 @@ public class FileUtility {
     }
 
     public static ArrayList<LanguageItem> parseLanguageFile(@NonNull AssetManager am) throws IOException, XmlPullParserException{
-        InputStream in = copyAssetFile(am, SQL_LANGUAGE_DATA_FILE);
+        InputStream in = copyAssetFile(am, LocalDataManager.SQL_LANGUAGE_DATA_FILE);
         ArrayList<LanguageItem> list = new ArrayList<>();
         XmlPullParser parser = Xml.newPullParser();
         parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
@@ -131,7 +132,7 @@ public class FileUtility {
                 String visibility = parser.getAttributeValue(null, "visibility");
                 String formal = parser.getAttributeValue(null,"polite");
                 String filename = parser.getAttributeValue(null, "filename");
-                list.add(new LanguageItem(name, isoCode, isoCode3, visibility, filename, formal,"false"));
+                list.add(new LanguageItem(name, isoCode, isoCode3, visibility, filename, formal));
             }
         }
         return list;

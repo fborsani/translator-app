@@ -11,22 +11,19 @@ public class LanguageItem {
     private final String visibility;
     private final String filename;
     private final boolean allowFormal;
-    private final boolean downloaded;
 
     public LanguageItem(@NonNull String name,
                         @NonNull String isoCode,
                         @NonNull String isoCode3,
                         @NonNull String visibility,
                         @NonNull String filename,
-                        boolean allowFormal,
-                        boolean downloaded) {
+                        boolean allowFormal) {
         this.name = name;
         this.isoCode = isoCode;
         this.isoCode3 = isoCode3;
         this.visibility = visibility;
         this.allowFormal = allowFormal;
         this.filename = filename;
-        this.downloaded = downloaded;
     }
 
     public LanguageItem(@NonNull String name,
@@ -34,15 +31,13 @@ public class LanguageItem {
                         @NonNull String isoCode3,
                         @NonNull String visibility,
                         @NonNull String filename,
-                        String allowFormal,
-                        String downloaded) {
+                        String allowFormal) {
         this.name = name;
         this.isoCode = isoCode;
         this.isoCode3 = isoCode3;
         this.visibility = visibility;
         this.filename = filename;
         this.allowFormal = allowFormal != null && (allowFormal.equals("true") || allowFormal.equals("1"));
-        this.downloaded = downloaded != null && (downloaded.equals("true") || downloaded.equals("1"));
     }
 
     public String getName() { return name; }
@@ -63,9 +58,6 @@ public class LanguageItem {
         return allowFormal? 1: 0;
     }
 
-    public int isDownloadedInt() {
-        return downloaded? 1: 0;
-    }
 
     @NonNull
     @Override
@@ -76,9 +68,9 @@ public class LanguageItem {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         LanguageItem that = (LanguageItem) o;
-        return allowFormal == that.allowFormal && downloaded == that.downloaded && Objects.equals(name, that.name) && Objects.equals(isoCode, that.isoCode);
+        return allowFormal == that.allowFormal && Objects.equals(name, that.name) && Objects.equals(isoCode, that.isoCode);
     }
 
     @Override
-    public int hashCode() { return Objects.hash(name, isoCode, allowFormal, downloaded); }
+    public int hashCode() { return Objects.hash(name, isoCode, isoCode3, allowFormal); }
 }

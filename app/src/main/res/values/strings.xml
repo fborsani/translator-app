@@ -42,4 +42,21 @@
     <string name="dialog_title_generic">Confirm</string>
     <string name="dialog_action_confirm">Confirm</string>
     <string name="dialog_action_cancel">Cancel</string>
+    <string name="action_from_clipboard_done">Text pasted</string>
+    <string name="action_from_clipboard_error_empty">Clipboard is empty</string>
+    <string name="action_from_clipboard_error_invalid_content">Clipboard content is not plain text</string>
+    <string name="action_translate_done">Translation completed</string>
+    <string name="action_translate_error_empty">Input text field is empty</string>
+    <string name="action_export_clipboard_done">Copied to clipboard</string>
+    <string name="clipboard_entry_name">translated text</string>
+    <string name="action_pick_gallery_app">Select gallery app</string>
+    <string name="action_pick_file_manager">Select file manager</string>
+    <string name="error_generic">An error has occured</string>
+    <string name="error_missing_api_key">Translation service API key is empty</string>
+    <string name="error_image_parse_init_failed">Unable to initialize image parser</string>
+    <string name="error_translation">Unable to execute translation. Verify connectivity and the supplied API key</string>
+    <string name="error_thread_interrupted">Service has terminated abruptly</string>
+    <string name="error_image_creation">Unable to store temporary image</string>
+    <string name="error_file_write">Application does not have storage write permissions</string>
+    <string name="action_test_connection_done">Key is valid</string>
 </resources>

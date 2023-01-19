@@ -7,6 +7,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -41,8 +42,6 @@ import com.example.mobiletranslator.db.LanguageItem;
 import java.io.IOException;
 import java.util.ArrayList;
 
-
-
 public class FragmentOriginalText extends Fragment {
     private Uri fileUri;
 
@@ -59,11 +58,11 @@ public class FragmentOriginalText extends Fragment {
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent intent = result.getData();
                         LanguageItem item = languageDataListIn.get(langInIdx);
-                        LocalDataManager ldm = new LocalDataManager(getContext());
+                        LocalDataManager ldm = new LocalDataManager(requireContext());
 
                         if(ldm.checkFile(LocalDataManager.OCR_FOLDER, item.getFilename())) {
                             ImageParser ip = new ImageParser(getContext(),item.getIsoCode3());
-                            EditText textField = getView().findViewById(R.id.textInputField);
+                            EditText textField = requireView().findViewById(R.id.textInputField);
 
                             if (intent != null && intent.getData() != null) {
                                 textField.setText(ip.parseUri(intent.getData()));
@@ -72,18 +71,18 @@ public class FragmentOriginalText extends Fragment {
                             }
                         }
                         else{
-                            String message = getView().getResources().getString(R.string.dialog_confirm_download_ocr);
+                            String message = requireView().getResources().getString(R.string.dialog_confirm_download_ocr);
                             ldm.downloadFileConfirmDialog(
                                     item.getFilename(),
                                     LocalDataManager.OCR_FOLDER,
                                     ldm.getOcrDownloadUri(),
-                                    getActivity(),
+                                    requireActivity(),
                                     String.format(message,item.getName()));
                         }
                     }
                 }
                 catch(AppException e){
-                    NotificationUtility.displayMessage(getActivity(),e);
+                    NotificationUtility.displayMessage(requireActivity(),e);
                 }
             });
 
@@ -93,12 +92,14 @@ public class FragmentOriginalText extends Fragment {
                 Intent intent = result.getData();
                 try {
                     if (result.getResultCode() == Activity.RESULT_OK && intent != null) {
-                        EditText textField = getView().findViewById(R.id.textInputField);
-                        textField.setText(FileUtility.readFile(intent.getData(), getActivity().getContentResolver()));
+                        EditText textField = requireView().findViewById(R.id.textInputField);
+                        textField.setText(FileUtility.readFile(intent.getData(), requireActivity().getContentResolver()));
                     }
                 }
-                catch(IOException | NullPointerException e){
-                    NotificationUtility.displayMessage(getActivity(),e.getMessage(), NotificationUtility.ERROR);
+                catch(IOException e){
+                    NotificationUtility.displayMessage(requireActivity(),
+                            e.getMessage(),
+                            NotificationUtility.snackBarStyle.ERROR);
                 }
             });
 
@@ -115,21 +116,25 @@ public class FragmentOriginalText extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         //list of references to layout items
-        final View contentView = getActivity().findViewById(android.R.id.content);
-        final EditText textField = getView().findViewById(R.id.textInputField);
-        final ImageButton galleryBtn = getView().findViewById(R.id.openGalleryBtn);
-        final ImageButton takePictureBtn = getView().findViewById(R.id.takePictureBtn);
-        final ImageButton readFromFileBtn = getView().findViewById(R.id.openFileBtn);
-        final ImageButton pasteBtn = getView().findViewById(R.id.pasteBtn);
-        final Spinner spinnerIn = getView().findViewById(R.id.languageFieldIn);
-        final Spinner spinnerOut = getView().findViewById(R.id.languageFieldOut);
-        final CheckBox formalCheckbox = getView().findViewById(R.id.checkUseFormal);
-        final Button translateBtn = getView().findViewById(R.id.translateBtn);
-        final Button clearBtn = getView().findViewById(R.id.clearinput);
+        final Activity activity = requireActivity();
+
+        final View contentView = activity.findViewById(android.R.id.content);
+        final EditText textField = activity.findViewById(R.id.textInputField);
+        final ImageButton galleryBtn = activity.findViewById(R.id.openGalleryBtn);
+        final ImageButton takePictureBtn = view.findViewById(R.id.takePictureBtn);
+        final ImageButton readFromFileBtn = view.findViewById(R.id.openFileBtn);
+        final ImageButton pasteBtn = view.findViewById(R.id.pasteBtn);
+        final Spinner spinnerIn = view.findViewById(R.id.languageFieldIn);
+        final Spinner spinnerOut = view.findViewById(R.id.languageFieldOut);
+        final CheckBox formalCheckbox = view.findViewById(R.id.checkUseFormal);
+        final Button translateBtn = view.findViewById(R.id.translateBtn);
+        final Button clearBtn = view.findViewById(R.id.clearinput);
+
+        final Resources resources = view.getResources();
 
         //hide options when user edits the text field in order to free up space for the keyboard
         textField.setOnFocusChangeListener((arg0, onFocus) -> {
-            LinearLayout optionsBlock = getView().findViewById(R.id.optionsBlock);
+            LinearLayout optionsBlock = view.findViewById(R.id.optionsBlock);
             if (onFocus) {
                 optionsBlock.setVisibility(View.GONE);
 
@@ -151,48 +156,63 @@ public class FragmentOriginalText extends Fragment {
             }
         });
 
+        final String intentTitleGallery = resources.getString(R.string.action_pick_gallery_app);
+        final String intentTitleFileManager = resources.getString(R.string.action_pick_file_manager);
+
         //Import functionality
-        readFromFileBtn.setOnClickListener(onClickReadFile -> retrieveTextFromFileActivityResult.launch(FileUtility.createIntentGetText()));
-        galleryBtn.setOnClickListener(onClickGallery -> retrieveImageActivityResult.launch(FileUtility.createIntentGetImage()));
+        readFromFileBtn.setOnClickListener(onClickReadFile -> retrieveTextFromFileActivityResult.launch(FileUtility.createIntentGetText(intentTitleGallery)));
+        galleryBtn.setOnClickListener(onClickGallery -> retrieveImageActivityResult.launch(FileUtility.createIntentGetImage(intentTitleFileManager)));
         takePictureBtn.setOnClickListener(onClickPicture -> {
             try {
                 Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                fileUri = FileUtility.createTempImageUri(getView().getContext());
+                fileUri = FileUtility.createTempImageUri(view.getContext());
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri);
                 retrieveImageActivityResult.launch(intent);
             }
             catch(IOException e){
-                NotificationUtility.displayMessage(getActivity(), e.getMessage(), NotificationUtility.ERROR);
+                NotificationUtility.displayMessage(
+                        activity,
+                        e.getMessage(),
+                        NotificationUtility.snackBarStyle.ERROR);
             }
         });
 
         pasteBtn.setOnClickListener(onClickPaste -> {
-            ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+            ClipboardManager clipboard = (ClipboardManager) activity.getSystemService(Context.CLIPBOARD_SERVICE);
             if(clipboard.hasPrimaryClip() && clipboard.getPrimaryClipDescription().hasMimeType(MIMETYPE_TEXT_PLAIN)){
                 ClipData.Item item = clipboard.getPrimaryClip().getItemAt(0);
                 if(item.getText() != null){
                     textField.setText(item.getText().toString());
-                    NotificationUtility.displayMessage(getActivity(),"Text pasted", NotificationUtility.SUCCESS);
+                    NotificationUtility.displayMessage(
+                            activity,
+                            resources.getString(R.string.action_from_clipboard_done),
+                            NotificationUtility.snackBarStyle.SUCCESS);
                 }
                 else{
-                    NotificationUtility.displayMessage(getActivity(),"Clipboard content is not plain text", NotificationUtility.ERROR);
+                    NotificationUtility.displayMessage(
+                            activity,
+                            resources.getString(R.string.action_from_clipboard_error_empty),
+                            NotificationUtility.snackBarStyle.ERROR);
                 }
             }
             else{
-                NotificationUtility.displayMessage(getActivity(),"Nothing to copy", NotificationUtility.ERROR);
+                NotificationUtility.displayMessage(
+                        activity,
+                        resources.getString(R.string.action_from_clipboard_error_invalid_content),
+                        NotificationUtility.snackBarStyle.ERROR);
             }
         });
 
 
         //Set values for language spinners
-        final DbManager dbm = new DbManager(getView().getContext());
+        final DbManager dbm = new DbManager(view.getContext());
         languageDataListIn = dbm.getLanguagesIn();
         languageDataListOut = dbm.getLanguagesOut();
 
-        ArrayAdapter<LanguageItem> adapterIn = new ArrayAdapter<>(getView().getContext(), android.R.layout.simple_spinner_item, languageDataListIn);
+        ArrayAdapter<LanguageItem> adapterIn = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_item, languageDataListIn);
         adapterIn.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        ArrayAdapter<LanguageItem> adapterOut = new ArrayAdapter<>(getView().getContext(), android.R.layout.simple_spinner_item, languageDataListOut);
+        ArrayAdapter<LanguageItem> adapterOut = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_item, languageDataListOut);
         adapterOut.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spinnerIn.setAdapter(adapterIn);
@@ -213,7 +233,7 @@ public class FragmentOriginalText extends Fragment {
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
                 langOutIdx = position;
 
-                CheckBox formalCheckbox = getView().findViewById(R.id.checkUseFormal);
+                CheckBox formalCheckbox = view.findViewById(R.id.checkUseFormal);
                 if(languageDataListOut.get(position).isAllowFormal()){
                     formalCheckbox.setVisibility(View.VISIBLE);
                 }
@@ -238,19 +258,25 @@ public class FragmentOriginalText extends Fragment {
                 if(!text.trim().equals("")) {
                     String currentIsoIn = languageDataListIn.get(langInIdx).getIsoCode();
                     String currentIsoOut = languageDataListOut.get(langOutIdx).getIsoCode();
-                    TranslatorManager tm = new TranslatorManager(getView().getContext());
+                    TranslatorManager tm = new TranslatorManager(view.getContext());
                     String translatedText = tm.translate(textField.getText().toString(), currentIsoIn, currentIsoOut, useFormal);
                     Bundle result = new Bundle();
                     result.putString("translatedText", translatedText);
                     getParentFragmentManager().setFragmentResult("translationFragment", result);
-                    NotificationUtility.displayMessage(getActivity(), "Translation completed", NotificationUtility.SUCCESS);
+                    NotificationUtility.displayMessage(
+                            activity,
+                            resources.getString(R.string.action_translate_done),
+                            NotificationUtility.snackBarStyle.SUCCESS);
                 }
                 else{
-                    NotificationUtility.displayMessage(getActivity(), "Text field is empty", NotificationUtility.ERROR);
+                    NotificationUtility.displayMessage(
+                            activity,
+                            resources.getString(R.string.action_translate_error_empty),
+                            NotificationUtility.snackBarStyle.ERROR);
                 }
             }
             catch(AppException e){
-                NotificationUtility.displayMessage(getActivity(), e);
+                NotificationUtility.displayMessage(activity, e);
             }
         });
 
