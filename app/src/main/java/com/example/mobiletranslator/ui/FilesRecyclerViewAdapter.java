@@ -2,6 +2,7 @@ package com.example.mobiletranslator.ui;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,9 +47,9 @@ public class FilesRecyclerViewAdapter extends RecyclerView.Adapter<FilesRecycler
         @Override
         public void onClick(View view) {
             ldm.downloadFileConfirmDialog(
-                    languageList.get(position).getIsoCode3(),
+                    languageList.get(position).getFilename(),
                     LocalDataManager.OCR_FOLDER,
-                    ldm.getOcrDownloadUri(),
+                    Uri.parse(ldm.getOcrDownloadStr()+"/"+languageList.get(position).getFilename()),
                     fatherActivity);
         }
     }

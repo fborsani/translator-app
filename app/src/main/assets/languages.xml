@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <languages>
-    <entry name="Chinese" iso="zh" iso3="chi" visibility="both" polite="false" filename="chi.traineddata"/>
+    <entry name="Chinese" iso="zh" iso3="chi" visibility="both" polite="false" filename="chi_sim.traineddata"/>
     <entry name="English" iso="en" iso3="eng" visibility="in" polite="false" filename="eng.traineddata"/>
     <entry name="English (US)" iso="en-us" iso3="eng" visibility="out" polite="false" filename="eng.traineddata"/>
     <entry name="English (UK)" iso="en-gb" iso3="eng" visibility="out" polite="false" filename="eng.traineddata"/>

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -31,7 +32,16 @@ public class FragmentConfigFiles extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         final RecyclerView filesList = view.findViewById(R.id.filesList);
+        final ImageButton refreshBtn = view.findViewById(R.id.refreshFilesBtn);
+
         final DbManager dbm = new DbManager(view.getContext());
+
+        refreshBtn.setOnClickListener(
+            viewOnClick -> {
+                FilesRecyclerViewAdapter adapter = new FilesRecyclerViewAdapter(requireActivity(), dbm.getLanguagesIn());
+                filesList.setAdapter(adapter);
+            }
+        );
 
         FilesRecyclerViewAdapter adapter = new FilesRecyclerViewAdapter(requireActivity(), dbm.getLanguagesIn());
         filesList.setAdapter(adapter);

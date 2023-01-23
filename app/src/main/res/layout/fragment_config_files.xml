@@ -26,6 +26,16 @@
             android:layout_width="match_parent"
             android:layout_height="16dp" />
 
+        <ImageButton
+            android:id="@+id/refreshFilesBtn"
+            android:layout_width="64dp"
+            android:layout_height="48dp"
+            app:srcCompat="@drawable/ic_baseline_refresh_24" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/filesList"
             android:layout_width="match_parent"

@@ -23,12 +23,12 @@ public final class LocalDataManager {
         this.context = context;
         filesDir = context.getExternalFilesDir(null);
         downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
-        ocrDownloadUrl = context.getResources().getString(R.string.ocr_trained_data_url_best);
+        ocrDownloadUrl = context.getResources().getString(R.string.ocr_trained_data_url_fast);
     }
 
     public String getFileDirPath(){ return filesDir.getAbsolutePath(); }
 
-    public Uri getOcrDownloadUri(){ return Uri.parse(ocrDownloadUrl); }
+    public String getOcrDownloadStr(){ return ocrDownloadUrl; }
 
     public boolean checkFile(String subfolder, String filename){
         return new File(filesDir+"/"+subfolder+"/"+filename).exists();
@@ -44,8 +44,6 @@ public final class LocalDataManager {
 
         if(mkdirResult) {
             DownloadManager.Request request = new DownloadManager.Request(uri);
-            request.setDescription("Downloading file");
-            request.setTitle("Downloading File");
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
             request.setDestinationInExternalFilesDir(context, subfolder, filename);
             downloadManager.enqueue(request);

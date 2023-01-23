@@ -75,7 +75,7 @@ public class FragmentOriginalText extends Fragment {
                             ldm.downloadFileConfirmDialog(
                                     item.getFilename(),
                                     LocalDataManager.OCR_FOLDER,
-                                    ldm.getOcrDownloadUri(),
+                                    Uri.parse(ldm.getOcrDownloadStr()+"/"+item.getFilename()),
                                     requireActivity(),
                                     String.format(message,item.getName()));
                         }
@@ -117,10 +117,10 @@ public class FragmentOriginalText extends Fragment {
 
         //list of references to layout items
         final Activity activity = requireActivity();
-
         final View contentView = activity.findViewById(android.R.id.content);
-        final EditText textField = activity.findViewById(R.id.textInputField);
-        final ImageButton galleryBtn = activity.findViewById(R.id.openGalleryBtn);
+
+        final EditText textField = view.findViewById(R.id.textInputField);
+        final ImageButton galleryBtn = view.findViewById(R.id.openGalleryBtn);
         final ImageButton takePictureBtn = view.findViewById(R.id.takePictureBtn);
         final ImageButton readFromFileBtn = view.findViewById(R.id.openFileBtn);
         final ImageButton pasteBtn = view.findViewById(R.id.pasteBtn);
